@@ -15,13 +15,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "FirestoreMenu";
+    private static final String TAG = "MainActivity";
     private MenuRepository menuRepository;
     private RecyclerView rcvProducts;
     private ProductAdapter productAdapter;
     private List<Product> productList;
     
-    // View báo lỗi
+    // View báo lỗi (Hỗ trợ kiểm tra link ảnh khi triển khai)
     private LinearLayout layoutStatus;
     private TextView tvStatusDetail;
 
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 productAdapter.notifyDataSetChanged();
                 Log.d(TAG, "Lấy dữ liệu thành công, số lượng món: " + products.size());
                 
-                // KIỂM TRA LINK VÀ HIỂN THỊ LÊN GIAO DIỆN
+                // Tự động kiểm tra link ảnh để báo lỗi nếu cần
                 checkImageLinks(products);
             }
 
@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Kiểm tra và liệt kê các món bị sai định dạng link ảnh (Link folder thay vì link file)
+     */
     private void checkImageLinks(List<Product> products) {
         int errorCount = 0;
         StringBuilder errorList = new StringBuilder();
@@ -82,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (errorCount > 0) {
             layoutStatus.setVisibility(View.VISIBLE);
-            tvStatusDetail.setText("Có " + errorCount + " món đang dùng link thư mục (sai):\n" + errorList.toString());
+            tvStatusDetail.setText("Phát hiện " + errorCount + " món dùng sai link thư mục Drive:\n" + errorList.toString());
         } else {
             layoutStatus.setVisibility(View.GONE);
         }
