@@ -91,7 +91,40 @@ Hãy viết theo công thức: **Loại: Mô tả ngắn gọn**
 
 ---
 
-## 6. Lưu ý sống còn
+## 6. Cách Gộp Nhánh Thủ Công (Manual Merge)
+Dùng khi bạn đã hoàn thành tính năng ở nhánh `feature/...` và muốn đưa nó vào nhánh chính `main` mà không dùng Pull Request trên GitHub:
+
+**Bước 1: Chuyển về nhánh main**
+```bash
+git checkout main
+```
+
+**Bước 2: Cập nhật code mới nhất của main từ server**
+```bash
+git pull origin main
+```
+
+**Bước 3: Gộp nhánh tính năng vào main**
+```bash
+git merge feature/ten-cua-ban
+```
+
+**Bước 4: Xử lý Xung đột (Conflict) - Nếu có**
+- Nếu Git báo "Conflict", hãy mở file bị đỏ lên, chọn giữ lại code của bạn hoặc của bạn mình (hoặc cả hai).
+- Sau khi sửa xong, lưu lại:
+  ```bash
+  git add .
+  git commit -m "Fix: Resolve merge conflicts"
+  ```
+
+**Bước 5: Đẩy code đã gộp lên GitHub**
+```bash
+git push origin main
+```
+
+---
+
+## 7. Lưu ý sống còn
 1. **PULL trước khi PUSH**: Luôn kéo code mới về trước khi đẩy code mình lên.
 2. **Không đẩy file rác**: File `google-services.json` và thư mục `build/` đã được chặn bởi `.gitignore`, đừng cố gắng ép chúng lên.
 3. **Commit thường xuyên**: Đừng để cả tuần mới commit một lần, lỡ máy hỏng là mất sạch code.
