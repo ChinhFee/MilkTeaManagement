@@ -5,13 +5,16 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.milkteamanagement.repositories.AuthRepository;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private Button btnLogin;
     private TextView tvRegister;
+    private AuthRepository authRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +26,44 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         tvRegister = findViewById(R.id.tvRegister);
 
+        authRepository = AuthRepository.getInstance();
+
+        // Kiểm tra nếu đã đăng nhập từ trước
+        if (authRepository.isLoggedIn()) {
+            navigateToMain();
+        }
+
         tvRegister.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
 
-        btnLogin.setOnClickListener(v -> {
-            // Logic đăng nhập sẽ được Huân xử lý ở phần feature/auth-logic
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-        });
+        btnLogin.setOnClickListener(v -> performLogin());
+    }
+
+    private void performLogin() {
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập email và mật khẩu", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        btnLogin.setEnabled(false);
+        authRepository.login(email, password)
+            .addOnCompleteListener(task -> {
+                btnLogin.setEnabled(true);
+                if (task.isSuccessful()) {
+                    Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                    navigateToMain();
+                } else {
+                    Toast.makeText(this, "Đăng nhập thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+    }
+
+    private void navigateToMain() {
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        finish();
     }
 }

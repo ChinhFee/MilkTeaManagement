@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MenuRepository {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference productsRef = db.collection("products");
+    private final CollectionReference productsRef = db.collection("Products");
 
     public interface ProductListCallback {
         void onSuccess(List<Product> products);

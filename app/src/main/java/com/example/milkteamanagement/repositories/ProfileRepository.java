@@ -13,7 +13,7 @@ public class ProfileRepository {
 
     private ProfileRepository() {
         db = FirebaseFirestore.getInstance();
-        usersRef = db.collection("users");
+        usersRef = db.collection("Users");
     }
 
     public static synchronized ProfileRepository getInstance() {

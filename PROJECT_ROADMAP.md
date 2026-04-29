@@ -10,22 +10,22 @@ Tài liệu này dùng để theo dõi tiến độ và phân chia công việc 
 
 ---
 
-## 🟦 GIAI ĐOẠN 1: GIAO DIỆN CƠ BẢN & ĐĂNG NHẬP
+## 🟦 GIAI ĐOẠN 1: GIAO DIỆN CƠ BẢN & ĐĂNG NHẬP (HOÀN THÀNH)
 **Mục tiêu:** Giúp người dùng vào được App và xác định quyền (Admin/Khách).
 
 ### 👨‍💻 CHÍNH: Phần Khách Hàng (Customer UI)
-- [ ] **Nhánh:** `feature/auth-ui`
+- [x] **Nhánh:** `feature/auth-ui`
     - Thiết kế màn hình Đăng nhập (Login) & Đăng ký (Register).
     - Thiết kế màn hình Thông tin cá nhân (Profile).
-- [ ] **Nhánh:** `feature/home-menu`
+- [x] **Nhánh:** `feature/home-menu`
     - Thiết kế màn hình chính hiển thị danh sách trà sữa (RecyclerView).
     - Tích hợp `MenuRepository` để lấy dữ liệu.
 
 ### 👨‍💻 HUÂN: Phần Quản Trị & Logic (Admin & Logic)
-- [ ] **Nhánh:** `feature/auth-logic`
+- [x] **Nhánh:** `feature/auth-logic`
     - Xử lý Đăng ký/Đăng nhập bằng Firebase Auth.
     - Lưu thông tin User vào Firestore (sử dụng `ProfileRepository`).
-- [ ] **Nhánh:** `feature/admin-dashboard`
+- [x] **Nhánh:** `feature/admin-dashboard`
     - Thiết kế màn hình chính của Admin (Dashboard).
     - Tạo các nút điều hướng đến quản lý món ăn, đơn hàng.
 

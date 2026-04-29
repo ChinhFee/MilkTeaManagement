@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.milkteamanagement"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.milkteamanagement"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
