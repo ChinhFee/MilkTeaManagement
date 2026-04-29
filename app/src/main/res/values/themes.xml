@@ -2,7 +2,10 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.MilkTeaManagement" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="android:windowBackground">@color/backgroundColor</item>
+        <item name="android:statusBarColor">@color/primaryColor</item>
     </style>
 
     <style name="Theme.MilkTeaManagement" parent="Base.Theme.MilkTeaManagement" />
