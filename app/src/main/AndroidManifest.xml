@@ -29,6 +29,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".AdminDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageMenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageOrdersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AnalyticsActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
