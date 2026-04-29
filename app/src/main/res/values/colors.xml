@@ -2,19 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
-    <!-- Tông màu trà sữa trẻ trung -->
-    <color name="primaryColor">#FF8C66</color> <!-- Màu cam sữa nhẹ -->
-    <color name="primaryLightColor">#FFBD94</color>
-    <color name="primaryDarkColor">#C85D3B</color>
-    <color name="secondaryColor">#F5F5DC</color> <!-- Màu Beige/Kem -->
-    <color name="backgroundColor">#FAFAFA</color>
-    <color name="textColorPrimary">#333333</color>
-    <color name="textColorSecondary">#757575</color>
-    <color name="errorColor">#EF5350</color>
-    <color name="successColor">#66BB6A</color>
-
-    <!-- Các màu bổ trợ -->
-    <color name="gray_light">#E0E0E0</color>
-    <color name="brown_soft">#D7CCC8</color>
+    <color name="admin_primary">#3F51B5</color>
+    <color name="admin_background">#F5F5F5</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="logout_red">#E53935</color>
 </resources>

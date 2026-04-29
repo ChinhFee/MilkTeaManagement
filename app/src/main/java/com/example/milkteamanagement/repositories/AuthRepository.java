@@ -2,10 +2,12 @@ package com.example.milkteamanagement.repositories;
 
 import com.example.milkteamanagement.models.User;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+@SuppressWarnings("unused")
 public class AuthRepository {
     private static AuthRepository instance;
     private final FirebaseAuth mAuth;
@@ -28,10 +30,10 @@ public class AuthRepository {
                 .onSuccessTask(authResult -> {
                     FirebaseUser firebaseUser = authResult.getUser();
                     if (firebaseUser != null) {
-                        User newUser = new User(firebaseUser.getUid(), fullName, email, phoneNumber, role);
+                        User newUser = new User(firebaseUser.getUid(), fullName, email, phoneNumber, "", role);
                         return profileRepository.saveUserProfile(newUser).continueWith(task -> authResult);
                     }
-                    return null;
+                    return Tasks.forResult(authResult);
                 });
     }
 
@@ -45,11 +47,15 @@ public class AuthRepository {
 
     public Task<User> getUserData() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if (firebaseUser != null) {
-            return profileRepository.getUserProfile(firebaseUser.getUid())
-                    .continueWith(task -> task.getResult().toObject(User.class));
-        }
-        return null;
+        if (firebaseUser == null) return Tasks.forResult(null);
+
+        return profileRepository.getUserProfile(firebaseUser.getUid())
+                .continueWith(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        return task.getResult().toObject(User.class);
+                    }
+                    return null;
+                });
     }
 
     public void logout() {
