@@ -7,7 +7,6 @@ public class Topping {
     private boolean isAvailable;
 
     public Topping() {
-        // Required for Firebase
     }
 
     public Topping(String id, String name, int price, boolean isAvailable) {

@@ -22,9 +22,6 @@ public class AdminAnalyticsRepository {
         db = FirebaseFirestore.getInstance();
     }
 
-    /**
-     * Thống kê doanh thu theo ngày/tháng
-     */
     public void getRevenueStats(long startTime, long endTime, AnalyticsCallback callback) {
         db.collection(FirebaseConstants.COL_ORDERS)
                 .whereEqualTo("status", FirebaseConstants.STATUS_COMPLETED)
@@ -43,9 +40,6 @@ public class AdminAnalyticsRepository {
                 .addOnFailureListener(e -> callback.onError(e.getMessage()));
     }
 
-    /**
-     * Tìm món bán chạy nhất và Topping được ưa chuộng nhất
-     */
     public void getBestSellers(AnalyticsCallback callback) {
         db.collection(FirebaseConstants.COL_ORDERS)
                 .whereEqualTo("status", FirebaseConstants.STATUS_COMPLETED)

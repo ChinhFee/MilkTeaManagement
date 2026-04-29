@@ -35,10 +35,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.tvPrice.setText(String.format("%,d VNĐ", product.getPrice()));
         holder.tvCategory.setText(product.getCategory());
 
-        // CHUYỂN ĐỔI LINK TRƯỚC KHI LOAD
         String directLink = driveRepository.convertToDirectLink(product.getImageUrl());
 
-        // Load ảnh bằng Glide
         Glide.with(holder.itemView.getContext())
                 .load(directLink)
                 .placeholder(android.R.drawable.ic_menu_gallery)

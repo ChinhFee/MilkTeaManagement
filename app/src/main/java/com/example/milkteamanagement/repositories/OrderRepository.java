@@ -22,9 +22,6 @@ public class OrderRepository {
         db = FirebaseFirestore.getInstance();
     }
 
-    /**
-     * Đặt hàng mới
-     */
     public void placeOrder(Order order, OrderActionCallback callback) {
         String orderId = db.collection(FirebaseConstants.COL_ORDERS).document().getId();
         order.setOrderId(orderId);
@@ -33,15 +30,12 @@ public class OrderRepository {
 
         db.collection(FirebaseConstants.COL_ORDERS).document(orderId).set(order)
                 .addOnSuccessListener(aVoid -> {
-                    CartManager.getInstance().clearCart(); // Xóa giỏ hàng sau khi đặt thành công
+                    CartManager.getInstance().clearCart();
                     callback.onSuccess();
                 })
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    /**
-     * Hủy đơn hàng (Chỉ khi đơn còn PENDING)
-     */
     public void cancelOrder(String orderId, OrderActionCallback callback) {
         db.collection(FirebaseConstants.COL_ORDERS).document(orderId)
                 .update("status", FirebaseConstants.STATUS_CANCELLED)
@@ -49,9 +43,6 @@ public class OrderRepository {
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    /**
-     * [ADMIN] Lấy tất cả đơn hàng theo trạng thái
-     */
     public void getOrdersByStatus(String status, OrderListCallback callback) {
         db.collection(FirebaseConstants.COL_ORDERS)
                 .whereEqualTo("status", status)
@@ -64,9 +55,6 @@ public class OrderRepository {
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    /**
-     * [ADMIN] Cập nhật trạng thái đơn hàng
-     */
     public void updateOrderStatus(String orderId, String newStatus, OrderActionCallback callback) {
         db.collection(FirebaseConstants.COL_ORDERS).document(orderId)
                 .update("status", newStatus)

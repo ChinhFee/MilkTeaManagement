@@ -1,43 +1,33 @@
 package com.example.milkteamanagement.repositories;
 
 import com.example.milkteamanagement.models.User;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileRepository {
+    private static ProfileRepository instance;
     private final FirebaseFirestore db;
+    private final CollectionReference usersRef;
 
-    public interface ProfileCallback {
-        void onSuccess(User user);
-        void onError(String error);
-    }
-
-    public ProfileRepository() {
+    private ProfileRepository() {
         db = FirebaseFirestore.getInstance();
+        usersRef = db.collection("users");
     }
 
-    /**
-     * Lấy thông tin User
-     */
-    public void getUserProfile(String userId, ProfileCallback callback) {
-        db.collection(FirebaseConstants.COL_USERS).document(userId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    User user = documentSnapshot.toObject(User.class);
-                    callback.onSuccess(user);
-                })
-                .addOnFailureListener(e -> callback.onError(e.getMessage()));
-    }
-
-    /**
-     * Cập nhật thông tin User
-     */
-    public void updateUserInfo(User user, ProfileCallback callback) {
-        if (user.getPhone() == null || user.getPhone().length() < 10) {
-            callback.onError("Số điện thoại không hợp lệ");
-            return;
+    public static synchronized ProfileRepository getInstance() {
+        if (instance == null) {
+            instance = new ProfileRepository();
         }
+        return instance;
+    }
 
-        db.collection(FirebaseConstants.COL_USERS).document(user.getUid()).set(user)
-                .addOnSuccessListener(aVoid -> callback.onSuccess(user))
-                .addOnFailureListener(e -> callback.onError(e.getMessage()));
+    public Task<Void> saveUserProfile(User user) {
+        return usersRef.document(user.getUid()).set(user);
+    }
+
+    public Task<DocumentSnapshot> getUserProfile(String uid) {
+        return usersRef.document(uid).get();
     }
 }

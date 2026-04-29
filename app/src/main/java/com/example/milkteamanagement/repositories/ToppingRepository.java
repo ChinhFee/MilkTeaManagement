@@ -21,9 +21,6 @@ public class ToppingRepository {
         db = FirebaseFirestore.getInstance();
     }
 
-    /**
-     * Lấy danh sách Topping (Realtime)
-     */
     public void getToppingsRealtime(ToppingListCallback callback) {
         db.collection(FirebaseConstants.COL_TOPPINGS)
                 .addSnapshotListener((value, error) -> {
@@ -38,9 +35,6 @@ public class ToppingRepository {
                 });
     }
 
-    /**
-     * Thêm hoặc cập nhật Topping
-     */
     public void upsertTopping(Topping topping, ToppingCallback callback) {
         String id = (topping.getId() == null || topping.getId().isEmpty())
                 ? db.collection(FirebaseConstants.COL_TOPPINGS).document().getId()
