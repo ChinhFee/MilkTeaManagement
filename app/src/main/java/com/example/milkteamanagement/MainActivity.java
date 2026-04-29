@@ -22,9 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Product> productList;
     
     // View báo lỗi (Hỗ trợ kiểm tra link ảnh khi triển khai)
-    private LinearLayout layoutStatus;
-    private TextView tvStatusDetail;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Ánh xạ View
         rcvProducts = findViewById(R.id.rcvProducts);
-        layoutStatus = findViewById(R.id.layoutStatus);
-        tvStatusDetail = findViewById(R.id.tvStatusDetail);
         
         rcvProducts.setLayoutManager(new LinearLayoutManager(this));
 
@@ -56,9 +52,6 @@ public class MainActivity extends AppCompatActivity {
                 productList.addAll(products);
                 productAdapter.notifyDataSetChanged();
                 Log.d(TAG, "Lấy dữ liệu thành công, số lượng món: " + products.size());
-                
-                // Tự động kiểm tra link ảnh để báo lỗi nếu cần
-                checkImageLinks(products);
             }
 
             @Override
@@ -66,28 +59,5 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "Lỗi khi lấy dữ liệu: " + message);
             }
         });
-    }
-
-    /**
-     * Kiểm tra và liệt kê các món bị sai định dạng link ảnh (Link folder thay vì link file)
-     */
-    private void checkImageLinks(List<Product> products) {
-        int errorCount = 0;
-        StringBuilder errorList = new StringBuilder();
-
-        for (Product p : products) {
-            String url = p.getImageUrl();
-            if (url != null && url.contains("drive.google.com/drive/folders")) {
-                errorCount++;
-                errorList.append("- ").append(p.getName()).append("\n");
-            }
-        }
-
-        if (errorCount > 0) {
-            layoutStatus.setVisibility(View.VISIBLE);
-            tvStatusDetail.setText("Phát hiện " + errorCount + " món dùng sai link thư mục Drive:\n" + errorList.toString());
-        } else {
-            layoutStatus.setVisibility(View.GONE);
-        }
     }
 }
