@@ -17,7 +17,6 @@ public class OrderHistoryRepository {
         db = FirebaseFirestore.getInstance();
     }
 
-    // Lọc theo khách hàng và sắp xếp thời gian (Firestore cực mạnh phần này)
     public void fetchUserOrderHistory(String customerId, OrderCallback callback) {
         if (customerId == null || customerId.isEmpty()) {
             callback.onError("ID khách hàng không hợp lệ");

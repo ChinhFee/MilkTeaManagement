@@ -6,10 +6,10 @@ public class CartItem {
     private String productId;
     private String productName;
     private int quantity;
-    private String size; // M, L
-    private List<Topping> toppings; // Đổi từ String sang Model Topping
-    private double unitPrice; // Giá gốc của 1 ly (chưa topping)
-    private double subTotal; // Tổng giá sau khi cộng topping và nhân số lượng
+    private String size;
+    private List<Topping> toppings;
+    private double unitPrice;
+    private double subTotal;
 
     public CartItem() {}
 
@@ -31,13 +31,10 @@ public class CartItem {
             }
         }
         
-        // Giả sử size L thêm 5000đ (Bạn có thể tùy chỉnh logic này)
         double sizePrice = "L".equalsIgnoreCase(size) ? 5000 : 0;
-        
         this.subTotal = (unitPrice + toppingPrice + sizePrice) * quantity;
     }
 
-    // Getter/Setter cho toppings đã đổi kiểu dữ liệu
     public List<Topping> getToppings() {
         return toppings;
     }
@@ -48,7 +45,7 @@ public class CartItem {
     }
     
     public double getSubTotal() {
-        calculateSubTotal(); // Luôn tính lại trước khi lấy giá
+        calculateSubTotal();
         return subTotal;
     }
     

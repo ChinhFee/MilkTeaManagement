@@ -10,7 +10,7 @@ public class Order {
     private String customerAddress;
     private List<CartItem> items;
     private double totalAmount;
-    private String status; // Dùng các hằng số trong FirebaseConstants
+    private String status;
     private String paymentMethod; 
     private long timestamp;
     private String note;
@@ -31,7 +31,6 @@ public class Order {
         this.note = note;
     }
 
-    // Getters and Setters
     public String getOrderId() { return orderId; }
     public void setOrderId(String orderId) { this.orderId = orderId; }
 
