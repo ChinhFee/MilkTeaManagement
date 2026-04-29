@@ -30,4 +30,8 @@ public class ProfileRepository {
     public Task<DocumentSnapshot> getUserProfile(String uid) {
         return usersRef.document(uid).get();
     }
+
+    public Task<Void> updateUserProfile(User user) {
+        return usersRef.document(user.getUid()).set(user);
+    }
 }

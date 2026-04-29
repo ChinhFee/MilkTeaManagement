@@ -47,8 +47,17 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         btnEditProfile.setOnClickListener(v -> {
-            Toast.makeText(this, "Chức năng đang được phát triển", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+            startActivityForResult(intent, 100);
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            loadUserProfile();
+        }
     }
 
     private void loadUserProfile() {
@@ -57,9 +66,16 @@ public class ProfileActivity extends AppCompatActivity {
                 User user = task.getResult();
                 tvName.setText(user.getFullName());
                 tvRole.setText("Vai trò: " + user.getRole());
-                tvEmail.setText(user.getEmail());
-                tvPhone.setText(user.getPhoneNumber());
-                tvAddress.setText(user.getAddress() != null && !user.getAddress().isEmpty() ? user.getAddress() : "Chưa cập nhật");
+                tvEmail.setText("Email: " + user.getEmail());
+                tvPhone.setText("SĐT: " + user.getPhoneNumber());
+                tvAddress.setText("Địa chỉ: " + (user.getAddress() != null && !user.getAddress().isEmpty() ? user.getAddress() : "Chưa cập nhật"));
+
+                // Thiết lập hình đại diện mặc định dựa trên giới tính
+                if ("Nữ".equalsIgnoreCase(user.getGender())) {
+                    imgAvatar.setImageResource(android.R.drawable.ic_menu_gallery); // Bạn có thể thay bằng icon nữ của bạn (ví dụ: R.drawable.ic_female)
+                } else {
+                    imgAvatar.setImageResource(android.R.drawable.ic_menu_gallery); // Bạn có thể thay bằng icon nam của bạn (ví dụ: R.drawable.ic_male)
+                }
             } else {
                 Toast.makeText(this, "Không thể tải thông tin cá nhân", Toast.LENGTH_SHORT).show();
             }

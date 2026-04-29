@@ -7,17 +7,19 @@ public class User {
     private String phoneNumber;
     private String address;
     private String role;
+    private String gender; // "Nam" hoặc "Nữ"
 
     public User() {
     }
 
-    public User(String uid, String fullName, String email, String phoneNumber, String address, String role) {
+    public User(String uid, String fullName, String email, String phoneNumber, String address, String role, String gender) {
         this.uid = uid;
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.role = role;
+        this.gender = gender;
     }
 
     public String getUid() { return uid; }
@@ -37,4 +39,7 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
 }

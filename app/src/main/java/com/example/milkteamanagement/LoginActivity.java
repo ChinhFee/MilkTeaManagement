@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.milkteamanagement.models.User;
 import com.example.milkteamanagement.repositories.AuthRepository;
 
 public class LoginActivity extends AppCompatActivity {
@@ -30,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Kiểm tra nếu đã đăng nhập từ trước
         if (authRepository.isLoggedIn()) {
-            navigateToMain();
+            checkUserRoleAndNavigate();
         }
 
         tvRegister.setOnClickListener(v -> {
@@ -52,18 +53,30 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setEnabled(false);
         authRepository.login(email, password)
             .addOnCompleteListener(task -> {
-                btnLogin.setEnabled(true);
                 if (task.isSuccessful()) {
-                    Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                    navigateToMain();
+                    checkUserRoleAndNavigate();
                 } else {
+                    btnLogin.setEnabled(true);
                     Toast.makeText(this, "Đăng nhập thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
     }
 
-    private void navigateToMain() {
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-        finish();
+    private void checkUserRoleAndNavigate() {
+        authRepository.getUserData().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                User user = task.getResult();
+                if ("admin".equalsIgnoreCase(user.getRole())) {
+                    startActivity(new Intent(LoginActivity.this, AdminDashboardActivity.class));
+                } else {
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                }
+                finish();
+            } else {
+                btnLogin.setEnabled(true);
+                authRepository.logout(); // Đăng xuất nếu không lấy được data
+                Toast.makeText(this, "Lỗi khi kiểm tra quyền truy cập", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

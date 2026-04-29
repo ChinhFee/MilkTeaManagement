@@ -25,12 +25,12 @@ public class AuthRepository {
         return instance;
     }
 
-    public Task<AuthResult> register(String email, String password, String fullName, String phoneNumber, String address, String role) {
+    public Task<AuthResult> register(String email, String password, String fullName, String phoneNumber, String address, String role, String gender) {
         return mAuth.createUserWithEmailAndPassword(email, password)
                 .onSuccessTask(authResult -> {
                     FirebaseUser firebaseUser = authResult.getUser();
                     if (firebaseUser != null) {
-                        User newUser = new User(firebaseUser.getUid(), fullName, email, phoneNumber, address, role);
+                        User newUser = new User(firebaseUser.getUid(), fullName, email, phoneNumber, address, role, gender);
                         return profileRepository.saveUserProfile(newUser).continueWith(task -> authResult);
                     }
                     return Tasks.forResult(authResult);

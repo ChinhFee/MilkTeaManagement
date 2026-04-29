@@ -60,6 +60,51 @@
             android:inputType="textPostalAddress"
             android:paddingHorizontal="20dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giới tính: "
+                android:textSize="16sp" />
+
+            <RadioGroup
+                android:id="@+id/rgGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nam"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/rbFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="Nữ" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/etAdminCode"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_edittext"
+            android:hint="Mã Admin (Để trống nếu là Khách)"
+            android:inputType="textPassword"
+            android:paddingHorizontal="20dp" />
+
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
