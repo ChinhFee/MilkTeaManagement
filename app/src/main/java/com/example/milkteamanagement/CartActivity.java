@@ -51,10 +51,8 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         });
 
         btnCheckout.setOnClickListener(v -> {
-            // Chuyển sang màn hình thanh toán
-            // Intent intent = new Intent(this, CheckoutActivity.class);
-            // startActivity(intent);
-            Toast.makeText(this, "Chức năng thanh toán đang được phát triển", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, CheckoutActivity.class);
+            startActivity(intent);
         });
     }
 

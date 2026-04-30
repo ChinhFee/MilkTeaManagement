@@ -38,7 +38,7 @@ Tài liệu này dùng để theo dõi tiến độ và phân chia công việc 
 - [x] **Nhánh:** `feature/product-detail`
     - Màn hình chi tiết món: Chọn Size (M/L), chọn Topping (Checkbox).
     - Nút "Thêm vào giỏ hàng".
-- [ ] **Nhánh:** `feature/cart-screen`
+- [x] **Nhánh:** `feature/cart-screen`
     - Thiết kế màn hình Giỏ hàng.
     - Hiển thị danh sách món đã chọn, tính tổng tiền (sử dụng `CartManager`).
 

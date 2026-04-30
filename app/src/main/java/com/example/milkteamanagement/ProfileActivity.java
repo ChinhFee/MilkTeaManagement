@@ -61,6 +61,10 @@ public class ProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
             editProfileLauncher.launch(intent);
         });
+
+        findViewById(R.id.btnOrderHistory).setOnClickListener(v -> {
+            startActivity(new Intent(ProfileActivity.this, OrderHistoryActivity.class));
+        });
     }
 
     private void loadUserProfile() {

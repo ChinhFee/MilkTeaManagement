@@ -1,12 +1,15 @@
 package com.example.milkteamanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.milkteamanagement.models.Product;
+import com.example.milkteamanagement.repositories.CartManager;
 import com.example.milkteamanagement.repositories.MenuRepository;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private ProductAdapter productAdapter;
     private List<Product> productList;
     private android.widget.ImageView btnProfile;
+    private ExtendedFloatingActionButton fabCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +31,17 @@ public class MainActivity extends AppCompatActivity {
         // Ánh xạ View
         rcvProducts = findViewById(R.id.rcvProducts);
         btnProfile = findViewById(R.id.btnProfile);
+        fabCart = findViewById(R.id.fabCart);
         rcvProducts.setLayoutManager(new LinearLayoutManager(this));
 
         // Sự kiện nút Profile
         btnProfile.setOnClickListener(v -> {
-            startActivity(new android.content.Intent(MainActivity.this, ProfileActivity.class));
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+        });
+
+        // Sự kiện nút Giỏ hàng
+        fabCart.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, CartActivity.class));
         });
 
         // Khởi tạo danh sách và Adapter
@@ -44,6 +54,22 @@ public class MainActivity extends AppCompatActivity {
 
         // Lấy dữ liệu từ Firebase
         loadMenuFromFirebase();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateCartFab();
+    }
+
+    private void updateCartFab() {
+        int count = CartManager.getInstance().getCartItems().size();
+        if (count > 0) {
+            fabCart.setText("Xem giỏ hàng (" + count + ")");
+            fabCart.show();
+        } else {
+            fabCart.hide();
+        }
     }
 
     private void loadMenuFromFirebase() {
