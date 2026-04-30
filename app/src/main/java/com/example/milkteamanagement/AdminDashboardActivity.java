@@ -24,7 +24,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
-        // Fetch and display Admin name
         loadAdminProfile();
 
         cardManageMenu.setOnClickListener(v -> startActivity(new Intent(this, ManageMenuActivity.class)));

@@ -29,10 +29,7 @@ public class OrderRepository {
         order.setStatus(FirebaseConstants.STATUS_PENDING);
 
         db.collection(FirebaseConstants.COL_ORDERS).document(orderId).set(order)
-                .addOnSuccessListener(aVoid -> {
-                    CartManager.getInstance().clearCart();
-                    callback.onSuccess();
-                })
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
@@ -43,10 +40,12 @@ public class OrderRepository {
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    public void getOrdersByStatus(String status, OrderListCallback callback) {
-        db.collection(FirebaseConstants.COL_ORDERS)
-                .whereEqualTo("status", status)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+    public void getOrders(String status, OrderListCallback callback) {
+        Query query = db.collection(FirebaseConstants.COL_ORDERS);
+        if (status != null) {
+            query = query.whereEqualTo("status", status);
+        }
+        query.orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Order> orders = queryDocumentSnapshots.toObjects(Order.class);

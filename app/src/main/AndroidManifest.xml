@@ -74,6 +74,14 @@
             android:name=".AnalyticsActivity"
             android:exported="false" />
 
+        <!-- New Order Management Activities -->
+        <activity
+            android:name=".OrderSummaryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TableMapActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
