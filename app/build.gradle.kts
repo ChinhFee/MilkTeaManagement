@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.gson)
     implementation(libs.swiperefreshlayout)
+    implementation(libs.mpAndroidChart)
     annotationProcessor(libs.glide.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
