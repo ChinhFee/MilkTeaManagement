@@ -72,9 +72,9 @@ public class ProfileActivity extends AppCompatActivity {
 
                 // Thiết lập hình đại diện mặc định dựa trên giới tính
                 if ("Nữ".equalsIgnoreCase(user.getGender())) {
-                    imgAvatar.setImageResource(android.R.drawable.ic_menu_gallery); // Bạn có thể thay bằng icon nữ của bạn (ví dụ: R.drawable.ic_female)
+                    imgAvatar.setImageResource(R.drawable.ic_gender_female);
                 } else {
-                    imgAvatar.setImageResource(android.R.drawable.ic_menu_gallery); // Bạn có thể thay bằng icon nam của bạn (ví dụ: R.drawable.ic_male)
+                    imgAvatar.setImageResource(R.drawable.ic_gender_male);
                 }
             } else {
                 Toast.makeText(this, "Không thể tải thông tin cá nhân", Toast.LENGTH_SHORT).show();

@@ -39,8 +39,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         Glide.with(holder.itemView.getContext())
                 .load(directLink)
-                .placeholder(android.R.drawable.ic_menu_gallery)
-                .error(android.R.drawable.stat_notify_error)
+                .placeholder(R.drawable.ic_launcher_foreground) // Sử dụng icon của project
+                .error(R.drawable.ic_launcher_foreground)      // Sử dụng icon của project
                 .into(holder.imgProduct);
     }
 
