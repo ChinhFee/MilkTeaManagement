@@ -18,6 +18,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
         CardView cardAnalytics = findViewById(R.id.cardAnalytics);
         CardView cardLogout = findViewById(R.id.cardLogout);
 
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+
         cardManageMenu.setOnClickListener(v -> startActivity(new Intent(this, ManageMenuActivity.class)));
         cardManageOrders.setOnClickListener(v -> startActivity(new Intent(this, ManageOrdersActivity.class)));
         cardAnalytics.setOnClickListener(v -> startActivity(new Intent(this, AnalyticsActivity.class)));

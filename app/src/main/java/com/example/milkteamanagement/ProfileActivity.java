@@ -39,6 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
         tvEmail = findViewById(R.id.tvEmail);
         tvPhone = findViewById(R.id.tvPhone);
         tvAddress = findViewById(R.id.tvAddress);
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         Button btnEditProfile = findViewById(R.id.btnEditProfile);
         Button btnLogout = findViewById(R.id.btnLogout);
 

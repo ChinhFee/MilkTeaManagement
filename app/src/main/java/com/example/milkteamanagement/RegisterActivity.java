@@ -35,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
         rgGender = findViewById(R.id.rgGender);
         btnRegister = findViewById(R.id.btnRegister);
         tvLogin = findViewById(R.id.tvLogin);
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         authRepository = AuthRepository.getInstance();
 

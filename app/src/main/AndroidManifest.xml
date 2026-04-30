@@ -14,11 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MilkTeaManagement" >
-        <service
-            android:name=".FirebaseService"
-            android:enabled="true"
-            android:exported="true" >
-        </service>
 
         <!-- Đặt LoginActivity làm màn hình khởi đầu -->
         <activity
@@ -38,6 +33,10 @@
             android:name=".MainActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ProductDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MilkTeaManagement.NoActionBar" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />

@@ -9,4 +9,6 @@
     </style>
 
     <style name="Theme.MilkTeaManagement" parent="Base.Theme.MilkTeaManagement" />
+
+    <style name="Theme.MilkTeaManagement.NoActionBar" parent="Theme.MilkTeaManagement" />
 </resources>

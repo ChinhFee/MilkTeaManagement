@@ -35,7 +35,7 @@ Tài liệu này dùng để theo dõi tiến độ và phân chia công việc 
 **Mục tiêu:** Khách có thể chọn món, thêm topping và đặt hàng.
 
 ### 👨‍💻 CHÍNH: Quy trình mua hàng
-- [ ] **Nhánh:** `feature/product-detail`
+- [x] **Nhánh:** `feature/product-detail`
     - Màn hình chi tiết món: Chọn Size (M/L), chọn Topping (Checkbox).
     - Nút "Thêm vào giỏ hàng".
 - [ ] **Nhánh:** `feature/cart-screen`

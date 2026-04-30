@@ -1,5 +1,6 @@
 package com.example.milkteamanagement;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.milkteamanagement.models.Product;
 import com.example.milkteamanagement.repositories.GoogleDriveRepository;
+import com.google.gson.Gson;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,9 +42,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         Glide.with(holder.itemView.getContext())
                 .load(directLink)
-                .placeholder(R.drawable.ic_launcher_foreground) // Sử dụng icon của project
-                .error(R.drawable.ic_launcher_foreground)      // Sử dụng icon của project
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.ic_launcher_foreground)
                 .into(holder.imgProduct);
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), ProductDetailActivity.class);
+            intent.putExtra("product_json", new Gson().toJson(product));
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override

@@ -35,6 +35,7 @@ public class EditProfileActivity extends AppCompatActivity {
         rbFemale = findViewById(R.id.rbEditFemale);
         btnSave = findViewById(R.id.btnSaveProfile);
         btnCancel = findViewById(R.id.btnCancelEdit);
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         authRepository = AuthRepository.getInstance();
         profileRepository = ProfileRepository.getInstance();

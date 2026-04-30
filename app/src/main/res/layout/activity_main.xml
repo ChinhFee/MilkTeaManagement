@@ -32,8 +32,10 @@
                 android:layout_height="32dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/bg_edittext"
-                android:contentDescription="Profile" />
+                android:background="@drawable/bg_edittext"
+                android:contentDescription="Profile"
+                android:padding="6dp"
+                android:src="@drawable/ic_profile" />
         </RelativeLayout>
 
         <EditText
