@@ -14,7 +14,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ImageView imgAvatar;
     private TextView tvName, tvRole, tvEmail, tvPhone, tvAddress;
-    private Button btnEditProfile, btnLogout;
     private AuthRepository authRepository;
 
     @Override
@@ -29,8 +28,8 @@ public class ProfileActivity extends AppCompatActivity {
         tvEmail = findViewById(R.id.tvEmail);
         tvPhone = findViewById(R.id.tvPhone);
         tvAddress = findViewById(R.id.tvAddress);
-        btnEditProfile = findViewById(R.id.btnEditProfile);
-        btnLogout = findViewById(R.id.btnLogout);
+        Button btnEditProfile = findViewById(R.id.btnEditProfile);
+        Button btnLogout = findViewById(R.id.btnLogout);
 
         authRepository = AuthRepository.getInstance();
 
@@ -65,10 +64,13 @@ public class ProfileActivity extends AppCompatActivity {
             if (task.isSuccessful() && task.getResult() != null) {
                 User user = task.getResult();
                 tvName.setText(user.getFullName());
-                tvRole.setText("Vai trò: " + user.getRole());
-                tvEmail.setText("Email: " + user.getEmail());
-                tvPhone.setText("SĐT: " + user.getPhoneNumber());
-                tvAddress.setText("Địa chỉ: " + (user.getAddress() != null && !user.getAddress().isEmpty() ? user.getAddress() : "Chưa cập nhật"));
+                tvRole.setText(getString(R.string.profile_role, user.getRole()));
+                tvEmail.setText(getString(R.string.profile_email, user.getEmail()));
+                tvPhone.setText(getString(R.string.profile_phone, user.getPhoneNumber()));
+                String address = (user.getAddress() != null && !user.getAddress().isEmpty()) 
+                        ? user.getAddress() 
+                        : getString(R.string.profile_address_not_updated);
+                tvAddress.setText(getString(R.string.profile_address, address));
 
                 // Thiết lập hình đại diện mặc định dựa trên giới tính
                 if ("Nữ".equalsIgnoreCase(user.getGender())) {
@@ -77,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
                     imgAvatar.setImageResource(R.drawable.ic_gender_male);
                 }
             } else {
-                Toast.makeText(this, "Không thể tải thông tin cá nhân", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.profile_load_error, Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -11,11 +11,12 @@ import com.bumptech.glide.Glide;
 import com.example.milkteamanagement.models.Product;
 import com.example.milkteamanagement.repositories.GoogleDriveRepository;
 import java.util.List;
+import java.util.Locale;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
-    private List<Product> productList;
-    private GoogleDriveRepository driveRepository = new GoogleDriveRepository();
+    private final List<Product> productList;
+    private final GoogleDriveRepository driveRepository = new GoogleDriveRepository();
 
     public ProductAdapter(List<Product> productList) {
         this.productList = productList;
@@ -32,7 +33,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
         holder.tvName.setText(product.getName());
-        holder.tvPrice.setText(String.format("%,d VNĐ", product.getPrice()));
+        holder.tvPrice.setText(String.format(Locale.getDefault(), "%,d VNĐ", product.getPrice()));
         holder.tvCategory.setText(product.getCategory());
 
         String directLink = driveRepository.convertToDirectLink(product.getImageUrl());
@@ -49,7 +50,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return productList.size();
     }
 
-    static class ProductViewHolder extends RecyclerView.ViewHolder {
+    private static class ProductViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProduct;
         TextView tvName, tvPrice, tvCategory;
 

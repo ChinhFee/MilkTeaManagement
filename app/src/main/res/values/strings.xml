@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MilkTeaManagement</string>
+    <string name="profile_role">Vai trò: %1$s</string>
+    <string name="profile_email">Email: %1$s</string>
+    <string name="profile_phone">SĐT: %1$s</string>
+    <string name="profile_address">Địa chỉ: %1$s</string>
+    <string name="profile_address_not_updated">Chưa cập nhật</string>
+    <string name="profile_load_error">Không thể tải thông tin cá nhân</string>
 </resources>
