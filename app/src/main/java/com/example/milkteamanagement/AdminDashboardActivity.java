@@ -22,8 +22,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         CardView cardAnalytics = findViewById(R.id.cardAnalytics);
         CardView cardLogout = findViewById(R.id.cardLogout);
 
-        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-
         // Fetch and display Admin name
         loadAdminProfile();
 
