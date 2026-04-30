@@ -8,41 +8,23 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp">
-
-        <ImageView
-            android:id="@+id/imgBanner"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@color/primaryColor" />
-
-        <ImageButton
-            android:id="@+id/btnChangeBanner"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="12dp"
-            android:background="@drawable/bg_quantity_button"
-            android:src="@android:drawable/ic_menu_camera"
-            app:tint="@color/primaryColor" />
+        android:layout_height="60dp">
 
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_margin="16dp"
+            android:layout_margin="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Quay lại"
             android:src="@drawable/ic_back"
-            app:tint="@color/white" />
+            app:tint="@color/primaryColor" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-60dp"
+        android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -79,14 +61,6 @@
             android:textColor="@color/textColorPrimary"
             android:textSize="22sp"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvRole"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Khách hàng thân thiết"
-            android:textColor="@color/primaryColor"
-            android:textStyle="italic" />
     </LinearLayout>
 
     <LinearLayout
@@ -137,28 +111,38 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginHorizontal="24dp"
-        android:background="@drawable/bg_button_primary"
+        android:backgroundTint="@color/primaryColor"
         android:text="Chỉnh sửa thông tin"
         android:textAllCaps="false"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="12dp" />
 
     <Button
         android:id="@+id/btnOrderHistory"
-        style="@style/Widget.Material3.Button.TonalButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="12dp"
         android:text="Lịch sử mua hàng"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:textColor="@color/primaryColor"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="12dp"
+        app:strokeColor="@color/primaryColor" />
 
     <Button
         android:id="@+id/btnLogout"
         style="@style/Widget.Material3.Button.TextButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
         android:text="Đăng xuất"
-        android:textColor="@color/errorColor" />
+        android:textColor="@color/errorColor"
+        android:textSize="14sp" />
 
 </LinearLayout>

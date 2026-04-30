@@ -72,15 +72,15 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
 
     private void updateUI() {
         if (cartManager.getCartItems().isEmpty()) {
-            llEmptyCart.setVisibility(View.VISIBLE);
-            llBottom.setVisibility(View.GONE);
-            rvCart.setVisibility(View.GONE);
-        } else {
-            llEmptyCart.setVisibility(View.GONE);
-            llBottom.setVisibility(View.VISIBLE);
-            rvCart.setVisibility(View.VISIBLE);
-            tvTotalPrice.setText(formatter.format(cartManager.getTotalCartPrice()));
+            Toast.makeText(this, "Giỏ hàng trống", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
+        
+        llEmptyCart.setVisibility(View.GONE);
+        llBottom.setVisibility(View.VISIBLE);
+        rvCart.setVisibility(View.VISIBLE);
+        tvTotalPrice.setText(formatter.format(cartManager.getTotalCartPrice()));
         adapter.notifyDataSetChanged();
     }
 

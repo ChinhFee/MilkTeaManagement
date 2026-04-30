@@ -1,6 +1,7 @@
 package com.example.milkteamanagement;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -80,15 +81,36 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void loadProductData() {
         String productJson = getIntent().getStringExtra("product_json");
         if (productJson != null) {
-            product = new Gson().fromJson(productJson, Product.class);
-            tvProductName.setText(product.getName());
-            tvProductPrice.setText(String.format(Locale.getDefault(), "%,d VNĐ", product.getPrice()));
+            try {
+                product = new Gson().fromJson(productJson, Product.class);
+            } catch (Exception e) {
+                Log.e("ProductDetail", "Lỗi parse JSON product: " + e.getMessage());
+            }
+        }
 
-            String directLink = driveRepository.convertToDirectLink(product.getImageUrl());
-            Glide.with(this)
-                    .load(directLink)
-                    .placeholder(R.drawable.ic_launcher_foreground)
-                    .into(imgProductDetail);
+        if (product != null) {
+            tvProductName.setText(product.getName() != null ? product.getName() : "Sản phẩm không tên");
+            
+            try {
+                tvProductPrice.setText(String.format(Locale.getDefault(), "%,d VNĐ", product.getPrice()));
+            } catch (Exception e) {
+                tvProductPrice.setText("Liên hệ");
+            }
+
+            String imageUrl = product.getImageUrl();
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                String directLink = driveRepository.convertToDirectLink(imageUrl);
+                Glide.with(this)
+                        .load(directLink)
+                        .placeholder(R.drawable.img_placeholder)
+                        .error(R.drawable.img_placeholder)
+                        .into(imgProductDetail);
+            } else {
+                imgProductDetail.setImageResource(R.drawable.img_placeholder);
+            }
+        } else {
+            Toast.makeText(this, "Không thể tải thông tin sản phẩm", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 

@@ -8,13 +8,12 @@ public class User {
     private String address;
     private String role;
     private String gender; // "Nam" hoặc "Nữ"
-    private String bannerUrl;
     private String avatarUrl;
 
     public User() {
     }
 
-    public User(String uid, String fullName, String email, String phoneNumber, String address, String role, String gender, String bannerUrl, String avatarUrl) {
+    public User(String uid, String fullName, String email, String phoneNumber, String address, String role, String gender) {
         this.uid = uid;
         this.fullName = fullName;
         this.email = email;
@@ -22,15 +21,21 @@ public class User {
         this.address = address;
         this.role = role;
         this.gender = gender;
-        this.bannerUrl = bannerUrl;
+    }
+
+    public User(String uid, String fullName, String email, String phoneNumber, String address, String role, String gender, String avatarUrl) {
+        this.uid = uid;
+        this.fullName = fullName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.role = role;
+        this.gender = gender;
         this.avatarUrl = avatarUrl;
     }
 
     public String getAvatarUrl() { return avatarUrl; }
     public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
-
-    public String getBannerUrl() { return bannerUrl; }
-    public void setBannerUrl(String bannerUrl) { this.bannerUrl = bannerUrl; }
 
     public String getUid() { return uid; }
     public void setUid(String uid) { this.uid = uid; }

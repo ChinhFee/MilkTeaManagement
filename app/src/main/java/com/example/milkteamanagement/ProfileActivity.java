@@ -18,18 +18,9 @@ import android.net.Uri;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private ImageView imgAvatar, imgBanner;
-    private TextView tvName, tvRole, tvEmail, tvPhone, tvAddress;
+    private ImageView imgAvatar;
+    private TextView tvName, tvEmail, tvPhone, tvAddress;
     private AuthRepository authRepository;
-
-    private final ActivityResultLauncher<String> pickBannerLauncher = registerForActivityResult(
-            new ActivityResultContracts.GetContent(),
-            uri -> {
-                if (uri != null) {
-                    uploadImage(uri, "banners");
-                }
-            }
-    );
 
     private final ActivityResultLauncher<String> pickAvatarLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
@@ -56,14 +47,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Ánh xạ View
         imgAvatar = findViewById(R.id.imgAvatar);
-        imgBanner = findViewById(R.id.imgBanner);
         tvName = findViewById(R.id.tvName);
-        tvRole = findViewById(R.id.tvRole);
         tvEmail = findViewById(R.id.tvEmail);
         tvPhone = findViewById(R.id.tvPhone);
         tvAddress = findViewById(R.id.tvAddress);
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        findViewById(R.id.btnChangeBanner).setOnClickListener(v -> pickBannerLauncher.launch("image/*"));
         findViewById(R.id.btnChangeAvatar).setOnClickListener(v -> pickAvatarLauncher.launch("image/*"));
         Button btnEditProfile = findViewById(R.id.btnEditProfile);
         Button btnLogout = findViewById(R.id.btnLogout);
@@ -98,18 +86,12 @@ public class ProfileActivity extends AppCompatActivity {
             if (task.isSuccessful() && task.getResult() != null) {
                 User user = task.getResult();
                 tvName.setText(user.getFullName());
-                tvRole.setText(getString(R.string.profile_role, user.getRole()));
                 tvEmail.setText(getString(R.string.profile_email, user.getEmail()));
                 tvPhone.setText(getString(R.string.profile_phone, user.getPhoneNumber()));
                 String address = (user.getAddress() != null && !user.getAddress().isEmpty()) 
                         ? user.getAddress() 
                         : getString(R.string.profile_address_not_updated);
                 tvAddress.setText(getString(R.string.profile_address, address));
-
-                // Load Banner
-                if (user.getBannerUrl() != null && !user.getBannerUrl().isEmpty()) {
-                    Glide.with(this).load(user.getBannerUrl()).into(imgBanner);
-                }
 
                 // Load Avatar
                 if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
@@ -156,9 +138,6 @@ public class ProfileActivity extends AppCompatActivity {
                     if (field.equals("avatarUrl")) {
                         Glide.with(this).load(url).circleCrop().into(imgAvatar);
                         Toast.makeText(this, "Đã cập nhật ảnh đại diện", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Glide.with(this).load(url).into(imgBanner);
-                        Toast.makeText(this, "Đã cập nhật ảnh nền", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

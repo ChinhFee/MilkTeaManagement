@@ -54,12 +54,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.tvName.setText(item.getProductName());
         
         // Load hình ảnh sản phẩm
-        if (item.getProductImageUrl() != null) {
+        if (item.getProductImageUrl() != null && !item.getProductImageUrl().isEmpty()) {
             String directLink = driveRepository.convertToDirectLink(item.getProductImageUrl());
             Glide.with(holder.itemView.getContext())
                     .load(directLink)
-                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .placeholder(R.drawable.img_placeholder)
+                    .error(R.drawable.img_placeholder)
                     .into(holder.imgProduct);
+        } else {
+            holder.imgProduct.setImageResource(R.drawable.img_placeholder);
         }
         
         StringBuilder options = new StringBuilder("Size " + item.getSize());

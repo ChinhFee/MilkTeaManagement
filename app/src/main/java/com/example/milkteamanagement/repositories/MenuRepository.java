@@ -1,10 +1,10 @@
 package com.example.milkteamanagement.repositories;
 
+import android.util.Log;
 import com.example.milkteamanagement.models.Product;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +27,16 @@ public class MenuRepository {
             List<Product> products = new ArrayList<>();
             if (value != null) {
                 for (QueryDocumentSnapshot doc : value) {
-                    Product product = doc.toObject(Product.class);
-                    product.setId(doc.getId());
-                    products.add(product);
+                    try {
+                        // Thử parse dữ liệu, nếu lỗi (sai kiểu dữ liệu) sẽ nhảy vào catch
+                        Product product = doc.toObject(Product.class);
+                        if (product != null) {
+                            product.setId(doc.getId());
+                            products.add(product);
+                        }
+                    } catch (Exception e) {
+                        Log.e("MenuRepository", "Dữ liệu món " + doc.getId() + " bị lỗi định dạng: " + e.getMessage());
+                    }
                 }
             }
             callback.onSuccess(products);

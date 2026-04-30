@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">MilkTeaManagement</string>
-    <string name="profile_role">Vai trò: %1$s</string>
+    <string name="app_name">AuraBOBA</string>
     <string name="profile_email">Email: %1$s</string>
     <string name="profile_phone">SĐT: %1$s</string>
     <string name="profile_address">Địa chỉ: %1$s</string>
