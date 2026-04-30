@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.milkteamanagement.models.User;
 import com.example.milkteamanagement.repositories.AuthRepository;
@@ -15,6 +17,15 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView imgAvatar;
     private TextView tvName, tvRole, tvEmail, tvPhone, tvAddress;
     private AuthRepository authRepository;
+
+    private final ActivityResultLauncher<Intent> editProfileLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    loadUserProfile();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +58,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         btnEditProfile.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
-            startActivityForResult(intent, 100);
+            editProfileLauncher.launch(intent);
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK) {
-            loadUserProfile();
-        }
     }
 
     private void loadUserProfile() {
