@@ -29,8 +29,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:background="@drawable/bg_title_frame"
                 android:letterSpacing="0.1"
-                android:text="MENU MANAGEMENT"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="4dp"
+                android:text="@string/menu_management"
                 android:textColor="@color/primaryColor"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -52,28 +55,42 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    app:tabIndicatorColor="@color/primaryColor"
+                    app:tabSelectedTextColor="@color/primaryColor"
+                    app:tabTextColor="@color/textColorSecondary"
+                    app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:background="@android:color/transparent">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sản phẩm" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Topping" />
+                </com.google.android.material.tabs.TabLayout>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp">
 
                     <TextView
+                        android:id="@+id/tvListTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Product List"
+                        android:text="Danh sách món"
                         android:textColor="@color/textColorPrimary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnAddProduct"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:text="+ Add New"
-                        android:textColor="@color/primaryDarkColor"
-                        android:textStyle="bold" />
                 </RelativeLayout>
 
                 <!-- Placeholder for RecyclerView -->

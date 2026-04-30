@@ -45,4 +45,10 @@ public class ToppingRepository {
                 .addOnSuccessListener(aVoid -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
+
+    public void deleteTopping(String toppingId, ToppingCallback callback) {
+        db.collection(FirebaseConstants.COL_TOPPINGS).document(toppingId).delete()
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
 }

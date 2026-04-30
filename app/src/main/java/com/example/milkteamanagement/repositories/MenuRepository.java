@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MenuRepository {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference productsRef = db.collection("Products");
+    private final CollectionReference productsRef = db.collection(FirebaseConstants.COL_PRODUCTS);
 
     public interface ProductListCallback {
         void onSuccess(List<Product> products);
@@ -28,7 +28,6 @@ public class MenuRepository {
             if (value != null) {
                 for (QueryDocumentSnapshot doc : value) {
                     try {
-                        // Thử parse dữ liệu, nếu lỗi (sai kiểu dữ liệu) sẽ nhảy vào catch
                         Product product = doc.toObject(Product.class);
                         if (product != null) {
                             product.setId(doc.getId());
@@ -41,5 +40,22 @@ public class MenuRepository {
             }
             callback.onSuccess(products);
         });
+    }
+
+    public void upsertProduct(Product product, ToppingRepository.ToppingCallback callback) {
+        String id = (product.getId() == null || product.getId().isEmpty())
+                ? productsRef.document().getId()
+                : product.getId();
+        product.setId(id);
+
+        productsRef.document(id).set(product)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    public void deleteProduct(String productId, ToppingRepository.ToppingCallback callback) {
+        productsRef.document(productId).delete()
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 }

@@ -5,4 +5,25 @@
     <string name="profile_address">Địa chỉ: %1$s</string>
     <string name="profile_address_not_updated">Chưa cập nhật</string>
     <string name="profile_load_error">Không thể tải thông tin cá nhân</string>
+
+    <!-- Manage Menu -->
+    <string name="menu_management">QUẢN LÝ MENU</string>
+    <string name="product_list">Danh sách món</string>
+    <string name="topping_list">Danh sách Topping</string>
+    <string name="add_new">+ Thêm mới</string>
+    <string name="edit_product">Chỉnh sửa món</string>
+    <string name="add_product">Thêm món mới</string>
+    <string name="edit_topping">Chỉnh sửa Topping</string>
+    <string name="add_topping">Thêm Topping mới</string>
+    <string name="save">Lưu</string>
+    <string name="cancel">Hủy</string>
+    <string name="delete_confirm_product">Bạn có chắc chắn muốn xóa món \'%1$s\' không?</string>
+    <string name="delete_confirm_topping">Bạn có chắc chắn muốn xóa topping \'%1$s\' không?</string>
+    <string name="delete_title_product">Xóa món</string>
+    <string name="delete_title_topping">Xóa Topping</string>
+    <string name="save_success">Đã lưu thành công</string>
+    <string name="delete_success">Đã xóa</string>
+    <string name="input_required">Vui lòng nhập đủ thông tin</string>
+    <string name="load_error_product">Lỗi tải sản phẩm: %1$s</string>
+    <string name="load_error_topping">Lỗi tải topping: %1$s</string>
 </resources>

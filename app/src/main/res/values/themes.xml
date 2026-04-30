@@ -16,4 +16,9 @@
     <style name="Theme.MilkTeaManagement" parent="Base.Theme.MilkTeaManagement" />
 
     <style name="Theme.MilkTeaManagement.NoActionBar" parent="Theme.MilkTeaManagement" />
+
+    <style name="CustomDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>
