@@ -11,12 +11,34 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.milkteamanagement.models.User;
 import com.example.milkteamanagement.repositories.AuthRepository;
+import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import android.net.Uri;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private ImageView imgAvatar;
+    private ImageView imgAvatar, imgBanner;
     private TextView tvName, tvRole, tvEmail, tvPhone, tvAddress;
     private AuthRepository authRepository;
+
+    private final ActivityResultLauncher<String> pickBannerLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null) {
+                    uploadImage(uri, "banners");
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<String> pickAvatarLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null) {
+                    uploadImage(uri, "avatars");
+                }
+            }
+    );
 
     private final ActivityResultLauncher<Intent> editProfileLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -34,12 +56,15 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Ánh xạ View
         imgAvatar = findViewById(R.id.imgAvatar);
+        imgBanner = findViewById(R.id.imgBanner);
         tvName = findViewById(R.id.tvName);
         tvRole = findViewById(R.id.tvRole);
         tvEmail = findViewById(R.id.tvEmail);
         tvPhone = findViewById(R.id.tvPhone);
         tvAddress = findViewById(R.id.tvAddress);
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        findViewById(R.id.btnChangeBanner).setOnClickListener(v -> pickBannerLauncher.launch("image/*"));
+        findViewById(R.id.btnChangeAvatar).setOnClickListener(v -> pickAvatarLauncher.launch("image/*"));
         Button btnEditProfile = findViewById(R.id.btnEditProfile);
         Button btnLogout = findViewById(R.id.btnLogout);
 
@@ -47,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Tải thông tin người dùng
         loadUserProfile();
+        // ... rest of the code
 
         // Xử lý đăng xuất
         btnLogout.setOnClickListener(v -> {
@@ -80,15 +106,60 @@ public class ProfileActivity extends AppCompatActivity {
                         : getString(R.string.profile_address_not_updated);
                 tvAddress.setText(getString(R.string.profile_address, address));
 
-                // Thiết lập hình đại diện mặc định dựa trên giới tính
-                if ("Nữ".equalsIgnoreCase(user.getGender())) {
-                    imgAvatar.setImageResource(R.drawable.ic_gender_female);
+                // Load Banner
+                if (user.getBannerUrl() != null && !user.getBannerUrl().isEmpty()) {
+                    Glide.with(this).load(user.getBannerUrl()).into(imgBanner);
+                }
+
+                // Load Avatar
+                if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
+                    Glide.with(this)
+                            .load(user.getAvatarUrl())
+                            .circleCrop()
+                            .into(imgAvatar);
                 } else {
-                    imgAvatar.setImageResource(R.drawable.ic_gender_male);
+                    // Thiết lập hình đại diện mặc định dựa trên giới tính nếu chưa có ảnh đại diện
+                    if ("Nữ".equalsIgnoreCase(user.getGender())) {
+                        imgAvatar.setImageResource(R.drawable.ic_gender_female);
+                    } else {
+                        imgAvatar.setImageResource(R.drawable.ic_gender_male);
+                    }
                 }
             } else {
                 Toast.makeText(this, R.string.profile_load_error, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void uploadImage(Uri imageUri, String folder) {
+        String userId = authRepository.getCurrentUser().getUid();
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference()
+                .child(folder + "/" + userId + ".jpg");
+
+        storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                String downloadUrl = uri.toString();
+                updateUserField(folder.equals("avatars") ? "avatarUrl" : "bannerUrl", downloadUrl);
+            });
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Tải ảnh lên thất bại", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void updateUserField(String field, String url) {
+        String userId = authRepository.getCurrentUser().getUid();
+        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(userId)
+                .update(field, url)
+                .addOnSuccessListener(aVoid -> {
+                    if (field.equals("avatarUrl")) {
+                        Glide.with(this).load(url).circleCrop().into(imgAvatar);
+                        Toast.makeText(this, "Đã cập nhật ảnh đại diện", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Glide.with(this).load(url).into(imgBanner);
+                        Toast.makeText(this, "Đã cập nhật ảnh nền", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

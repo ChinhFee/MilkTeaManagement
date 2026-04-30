@@ -134,6 +134,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             CartItem cartItem = new CartItem(
                     product.getId(),
                     product.getName(),
+                    product.getImageUrl(),
                     quantity,
                     size,
                     selectedToppings,

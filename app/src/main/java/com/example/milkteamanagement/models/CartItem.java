@@ -5,6 +5,7 @@ import java.util.List;
 public class CartItem {
     private String productId;
     private String productName;
+    private String productImageUrl;
     private int quantity;
     private String size;
     private List<Topping> toppings;
@@ -13,15 +14,19 @@ public class CartItem {
 
     public CartItem() {}
 
-    public CartItem(String productId, String productName, int quantity, String size, List<Topping> toppings, double unitPrice) {
+    public CartItem(String productId, String productName, String productImageUrl, int quantity, String size, List<Topping> toppings, double unitPrice) {
         this.productId = productId;
         this.productName = productName;
+        this.productImageUrl = productImageUrl;
         this.quantity = quantity;
         this.size = size;
         this.toppings = toppings;
         this.unitPrice = unitPrice;
         calculateSubTotal();
     }
+
+    public String getProductImageUrl() { return productImageUrl; }
+    public void setProductImageUrl(String productImageUrl) { this.productImageUrl = productImageUrl; }
 
     public void calculateSubTotal() {
         double toppingPrice = 0;

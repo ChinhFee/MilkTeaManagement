@@ -9,8 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.example.milkteamanagement.models.CartItem;
 import com.example.milkteamanagement.models.Topping;
+import com.example.milkteamanagement.repositories.GoogleDriveRepository;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private List<CartItem> cartItems;
     private OnCartChangeListener listener;
     private DecimalFormat formatter = new DecimalFormat("#,###đ");
+    private GoogleDriveRepository driveRepository = new GoogleDriveRepository();
 
     public interface OnCartChangeListener {
         void onQuantityChanged();
@@ -49,6 +52,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         CartItem item = cartItems.get(position);
         holder.tvName.setText(item.getProductName());
+        
+        // Load hình ảnh sản phẩm
+        if (item.getProductImageUrl() != null) {
+            String directLink = driveRepository.convertToDirectLink(item.getProductImageUrl());
+            Glide.with(holder.itemView.getContext())
+                    .load(directLink)
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .into(holder.imgProduct);
+        }
         
         StringBuilder options = new StringBuilder("Size " + item.getSize());
         if (item.getToppings() != null && !item.getToppings().isEmpty()) {
