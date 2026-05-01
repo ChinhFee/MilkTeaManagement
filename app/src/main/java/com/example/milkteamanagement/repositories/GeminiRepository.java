@@ -8,36 +8,45 @@ import com.google.ai.client.generativeai.type.Content;
 import com.google.ai.client.generativeai.type.GenerateContentResponse;
 import com.google.ai.client.generativeai.type.RequestOptions;
 import com.google.common.util.concurrent.ListenableFuture;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GeminiRepository {
     private final GenerativeModelFutures model;
     private ChatFutures chatContext;
+    private final String menuData;
 
     public GeminiRepository(String apiKey, String menuData) {
-        Log.d("GeminiRepository", "Initializing Gemini with model: gemini-1.5-flash");
-        // System instruction giúp AI hiểu vai trò cố định mà không cần gửi kèm mỗi tin nhắn
-        Content systemInstruction = new Content.Builder()
-                .addText("Bạn là trợ lý ảo của quán trà sữa AuraBOBA (phong cách sang trọng Gold/Dark). " +
-                        "Dưới đây là danh sách menu hiện tại: " + menuData + ". " +
-                        "Hãy trả lời ngắn gọn, lịch sự và gợi ý món dựa trên yêu cầu của khách. " +
-                        "Nếu khách hỏi món không có trong menu, hãy khéo léo gợi ý món tương tự.")
-                .build();
+        this.menuData = menuData;
+        Log.d("GeminiRepository", "Initializing Gemini 1.5 Flash on v1beta endpoint");
 
-        // Quay lại v1beta để sử dụng được tính năng systemInstruction (vai trò trợ lý)
-        // Đây là cấu hình chuẩn cho Gemini 1.5 Flash trên Android SDK
+        // Thiết lập System Instruction (Vai trò hệ thống)
+        Content.Builder systemBuilder = new Content.Builder();
+        systemBuilder.setRole("system"); 
+        systemBuilder.addText("Bạn là trợ lý ảo của quán trà sữa AuraBOBA (sang trọng Gold/Dark). " +
+                "Đây là menu của quán: " + menuData + ". " +
+                "Hãy trả lời ngắn gọn, lịch sự. Nếu khách hỏi món không có, hãy gợi ý món tương tự.");
+        Content systemInstruction = systemBuilder.build();
+
         GenerativeModel gm = new GenerativeModel(
-                "gemini-1.5-flash", 
+                "gemini-1.5-flash", // Thử model name chuẩn
                 apiKey,
                 null,               // generationConfig
                 null,               // safetySettings
-                new RequestOptions(60000L, "v1beta"), // Bắt buộc dùng v1beta cho systemInstruction
+                new RequestOptions(60000L, "v1beta"), // Chuyển sang v1beta
                 null,               // tools
                 null,               // toolConfig
-                systemInstruction   // systemInstruction
+                systemInstruction
         );
 
         this.model = GenerativeModelFutures.from(gm);
-        this.chatContext = model.startChat(); // Bắt đầu phiên chat để giữ ngữ cảnh
+        this.chatContext = initChat();
+    }
+
+    private ChatFutures initChat() {
+        // Sau khi đã dùng systemInstruction, lịch sử ban đầu có thể để trống
+        List<Content> history = new ArrayList<>();
+        return model.startChat(history);
     }
 
     public ListenableFuture<GenerateContentResponse> sendMessage(String userPrompt) {
@@ -48,7 +57,6 @@ public class GeminiRepository {
     }
 
     public void clearChat() {
-        // Xóa lịch sử trò chuyện
-        this.chatContext = model.startChat();
+        this.chatContext = initChat();
     }
 }

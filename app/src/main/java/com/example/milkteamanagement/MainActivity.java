@@ -129,12 +129,14 @@ public class MainActivity extends AppCompatActivity {
                         loading.setVisibility(View.GONE);
                         // Hiển thị chi tiết lỗi để debug dễ hơn
                         String errorMsg = t.getMessage();
+                        String detail = t.toString(); // Lấy toàn bộ class name và message
+                        
                         if (errorMsg != null && errorMsg.contains("404")) {
-                            tvResponse.setText("Lỗi 404: Model không tồn tại hoặc API Version sai.");
+                            tvResponse.setText("Lỗi 404: Model 'gemini-1.5-flash' không tìm thấy trên v1beta.\nChi tiết: " + detail);
                         } else if (errorMsg != null && errorMsg.contains("403")) {
-                            tvResponse.setText("Lỗi 403: API Key không có quyền hoặc sai vùng lãnh thổ.");
+                            tvResponse.setText("Lỗi 403: API Key bị từ chối. Kiểm tra giới hạn vùng (Region) hoặc Package Name.\nChi tiết: " + detail);
                         } else {
-                            tvResponse.setText("Lỗi: " + (errorMsg != null ? errorMsg : "Không xác định"));
+                            tvResponse.setText("Lỗi: " + detail);
                         }
                     });
                 }
@@ -177,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Khởi tạo hoặc cập nhật Gemini với menu mới
                 if (geminiRepository == null) {
-                    geminiRepository = new GeminiRepository("AIzaSyBL-D1_vCiDhxMVCKsSTHiMcYJ3iLATqZg", menuStr.toString());
+                    geminiRepository = new GeminiRepository("AIzaSyBxyhvSj8J5QKXZJvM34F9rXwJF645NlRA", menuStr.toString());
                 }
                 
                 setupTabs(products);
