@@ -54,6 +54,10 @@ public class OrderRepository {
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
+    public void getOrdersByStatus(String status, OrderListCallback callback) {
+        getOrders(status, callback);
+    }
+
     public void updateOrderStatus(String orderId, String newStatus, OrderActionCallback callback) {
         db.collection(FirebaseConstants.COL_ORDERS).document(orderId)
                 .update("status", newStatus)

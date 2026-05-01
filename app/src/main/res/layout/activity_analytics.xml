@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Thống kê &amp; Báo cáo"
+            android:text="Thong ke va Bao cao"
             android:textColor="@color/textColorPrimary"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -41,17 +41,12 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nhập - Bán" />
+            android:text="Hang ngay" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hàng ngày" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tuần/Tháng" />
+            android:text="Tuan/Thang" />
     </com.google.android.material.tabs.TabLayout>
 
     <FrameLayout
@@ -69,7 +64,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Card Tổng quan -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -87,7 +81,7 @@
                             android:id="@+id/tvAnalyticsTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tổng doanh thu"
+                            android:text="Tong doanh thu"
                             android:textColor="@color/textColorSecondary"
                             android:textSize="14sp" />
 
@@ -95,14 +89,21 @@
                             android:id="@+id/tvTotalValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0đ"
+                            android:text="0d"
                             android:textColor="@color/primaryDarkColor"
                             android:textSize="24sp"
                             android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/btnSeedOrders"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Tao don test"
+                            android:textAllCaps="false" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Biểu đồ chính -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
@@ -110,29 +111,21 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
 
-                    <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/barChart"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="8dp" />
-
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/lineChart"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="8dp"
-                        android:visibility="gone" />
+                        android:padding="8dp" />
                 </androidx.cardview.widget.CardView>
 
-                <!-- Biểu đồ phụ (Cơ cấu sản phẩm) -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardPieChart"
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
                     android:layout_marginBottom="16dp"
+                    android:visibility="gone"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    android:visibility="gone">
+                    app:cardElevation="2dp">
 
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/pieChart"
@@ -140,24 +133,6 @@
                         android:layout_height="match_parent"
                         android:padding="8dp" />
                 </androidx.cardview.widget.CardView>
-
-                <!-- Danh sách chi tiết (hiển thị khi click vào biểu đồ) -->
-                <TextView
-                    android:id="@+id/tvDetailTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="Chi tiết từng món"
-                    android:textColor="@color/textColorPrimary"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvDetails"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:visibility="gone" />
 
             </LinearLayout>
         </ScrollView>

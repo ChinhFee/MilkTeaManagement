@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.swiperefreshlayout)
     implementation(libs.generative.ai)
     implementation(libs.guava)
+    implementation(libs.mpandroidchart)
     annotationProcessor(libs.glide.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

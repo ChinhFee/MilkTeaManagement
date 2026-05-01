@@ -3,22 +3,16 @@ package com.example.milkteamanagement;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import com.example.milkteamanagement.models.CartItem;
 import com.example.milkteamanagement.models.Order;
-import com.example.milkteamanagement.models.Supply;
 import com.example.milkteamanagement.repositories.FirebaseConstants;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -26,11 +20,13 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.WriteBatch;
+import java.util.Arrays;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -39,12 +35,10 @@ import java.util.Locale;
 import java.util.Map;
 
 public class AnalyticsActivity extends AppCompatActivity {
-
-    private BarChart barChart;
     private LineChart lineChart;
     private PieChart pieChart;
-    private TextView tvTotalValue, tvAnalyticsTitle, tvDetailTitle;
-    private RecyclerView rvDetails;
+    private TextView tvTotalValue, tvAnalyticsTitle;
+    private Button btnSeedOrders;
     private TabLayout tabLayout;
     private FirebaseFirestore db;
 
@@ -56,195 +50,240 @@ public class AnalyticsActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         initViews();
         setupTabs();
-        
-        // Mặc định load Tab 1
-        loadTask1Comparison();
+        loadDailyAnalytics();
     }
 
     private void initViews() {
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        barChart = findViewById(R.id.barChart);
         lineChart = findViewById(R.id.lineChart);
         pieChart = findViewById(R.id.pieChart);
         tvTotalValue = findViewById(R.id.tvTotalValue);
         tvAnalyticsTitle = findViewById(R.id.tvAnalyticsTitle);
-        tvDetailTitle = findViewById(R.id.tvDetailTitle);
-        rvDetails = findViewById(R.id.rvDetails);
+        btnSeedOrders = findViewById(R.id.btnSeedOrders);
         tabLayout = findViewById(R.id.tabLayoutAnalytics);
+        btnSeedOrders.setOnClickListener(v -> seedCompletedOrders());
+    }
 
-        rvDetails.setLayoutManager(new LinearLayoutManager(this));
+    private void seedCompletedOrders() {
+        btnSeedOrders.setEnabled(false);
+        btnSeedOrders.setText("Dang tao...");
+
+        WriteBatch batch = db.batch();
+        long now = System.currentTimeMillis();
+
+        addOrder(batch, now - hours(1), "Khach test 01",
+                cartItem("p01", "Luc tra chanh", 2, 20000),
+                cartItem("p02", "Tra dao", 1, 28000));
+        addOrder(batch, now - hours(4), "Khach test 02",
+                cartItem("p03", "Tra bi dao suong sao", 3, 18000));
+        addOrder(batch, now - days(1), "Khach test 03",
+                cartItem("p04", "Tra sua tran chau", 2, 30000),
+                cartItem("p02", "Tra dao", 2, 28000));
+        addOrder(batch, now - days(2), "Khach test 04",
+                cartItem("p05", "Matcha latte", 2, 35000));
+        addOrder(batch, now - days(4), "Khach test 05",
+                cartItem("p01", "Luc tra chanh", 4, 20000),
+                cartItem("p04", "Tra sua tran chau", 1, 30000));
+        addOrder(batch, now - days(6), "Khach test 06",
+                cartItem("p03", "Tra bi dao suong sao", 2, 18000),
+                cartItem("p05", "Matcha latte", 1, 35000));
+
+        batch.commit()
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, "Da tao don test", Toast.LENGTH_SHORT).show();
+                    btnSeedOrders.setEnabled(true);
+                    btnSeedOrders.setText("Tao don test");
+                    reloadCurrentTab();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Loi tao don test: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    btnSeedOrders.setEnabled(true);
+                    btnSeedOrders.setText("Tao don test");
+                });
+    }
+
+    private void addOrder(WriteBatch batch, long timestamp, String customerName, CartItem... items) {
+        DocumentReference ref = db.collection(FirebaseConstants.COL_ORDERS).document();
+        double total = 0;
+        for (CartItem item : items) {
+            total += item.getSubTotal();
+        }
+
+        Order order = new Order(
+                ref.getId(),
+                "test-customer",
+                customerName,
+                "0900000000",
+                "Dia chi test",
+                Arrays.asList(items),
+                total,
+                FirebaseConstants.STATUS_COMPLETED,
+                FirebaseConstants.PAYMENT_CASH,
+                timestamp,
+                "Analytics test data"
+        );
+        batch.set(ref, order);
+    }
+
+    private CartItem cartItem(String productId, String productName, int quantity, double unitPrice) {
+        return new CartItem(productId, productName, "", quantity, "M", "100%", "100%", new ArrayList<>(), unitPrice);
+    }
+
+    private void reloadCurrentTab() {
+        resetCharts();
+        if (tabLayout.getSelectedTabPosition() == 0) {
+            loadDailyAnalytics();
+        } else {
+            loadWeeklyMonthlyAnalytics();
+        }
+    }
+
+    private long days(int value) {
+        return value * 24L * 60L * 60L * 1000L;
+    }
+
+    private long hours(int value) {
+        return value * 60L * 60L * 1000L;
     }
 
     private void setupTabs() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                resetUI();
-                switch (tab.getPosition()) {
-                    case 0: loadTask1Comparison(); break;
-                    case 1: loadDailyAnalytics(); break;
-                    case 2: loadWeeklyMonthlyAnalytics(); break;
+                resetCharts();
+                if (tab.getPosition() == 0) {
+                    loadDailyAnalytics();
+                } else {
+                    loadWeeklyMonthlyAnalytics();
                 }
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {}
+
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
         });
     }
 
-    private void resetUI() {
-        barChart.setVisibility(View.GONE);
-        lineChart.setVisibility(View.GONE);
+    private void resetCharts() {
         findViewById(R.id.cardPieChart).setVisibility(View.GONE);
-        tvDetailTitle.setVisibility(View.GONE);
-        rvDetails.setVisibility(View.GONE);
-        barChart.clear();
         lineChart.clear();
         pieChart.clear();
     }
 
-    // TÁC VỤ 1: Thống kê Nhập vs Bán (BarChart)
-    private void loadTask1Comparison() {
-        tvAnalyticsTitle.setText("So sánh Nhập hàng - Bán ra");
-        barChart.setVisibility(View.VISIBLE);
-
-        db.collection(FirebaseConstants.COL_SUPPLY).get().addOnSuccessListener(supplyDocs -> {
-            double totalInput = 0;
-            Map<String, Supply.SupplyItem> inputDetails = new HashMap<>();
-            for (QueryDocumentSnapshot doc : supplyDocs) {
-                Supply supply = doc.toObject(Supply.class);
-                totalInput += supply.getTotalCost();
-                if (supply.getItems() != null) {
-                    for (Supply.SupplyItem item : supply.getItems()) {
-                        Supply.SupplyItem existing = inputDetails.get(item.getItemName());
-                        if (existing == null) {
-                            inputDetails.put(item.getItemName(), item);
-                        } else {
-                            existing.setQuantity(existing.getQuantity() + item.getQuantity());
-                        }
-                    }
-                }
-            }
-
-            double finalTotalInput = totalInput;
-            db.collection(FirebaseConstants.COL_ORDERS)
-                    .whereEqualTo("status", FirebaseConstants.STATUS_COMPLETED)
-                    .get().addOnSuccessListener(orderDocs -> {
-                double totalSales = 0;
-                Map<String, CartItem> salesDetails = new HashMap<>();
-                for (QueryDocumentSnapshot doc : orderDocs) {
-                    Order order = doc.toObject(Order.class);
-                    totalSales += order.getTotalAmount();
-                    for (CartItem item : order.getItems()) {
-                        CartItem existing = salesDetails.get(item.getProductName());
-                        if (existing == null) {
-                            salesDetails.put(item.getProductName(), item);
-                        } else {
-                            existing.setQuantity(existing.getQuantity() + item.getQuantity());
-                        }
-                    }
-                }
-
-                showBarChartTask1(finalTotalInput, totalSales, inputDetails, salesDetails);
-            });
-        });
-    }
-
-    private void showBarChartTask1(double input, double sales, Map<String, Supply.SupplyItem> inDetails, Map<String, CartItem> outDetails) {
-        tvTotalValue.setText(String.format(Locale.getDefault(), "Lợi nhuận: %,.0fđ", (sales - input)));
-        
-        List<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0, (float) input));
-        entries.add(new BarEntry(1, (float) sales));
-
-        BarDataSet dataSet = new BarDataSet(entries, "Giá trị (VND)");
-        dataSet.setColors(new int[]{Color.RED, Color.GREEN});
-        dataSet.setValueTextSize(12f);
-
-        BarData data = new BarData(dataSet);
-        barChart.setData(data);
-        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(new String[]{"Hàng nhập", "Bán được"}));
-        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        barChart.getXAxis().setGranularity(1f);
-        barChart.animateY(1000);
-        barChart.invalidate();
-
-        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                tvDetailTitle.setVisibility(View.VISIBLE);
-                rvDetails.setVisibility(View.VISIBLE);
-                if (e.getX() == 0) {
-                    tvDetailTitle.setText("Chi tiết hàng nhập (Tổng: " + String.format("%,.0fđ", input) + ")");
-                    // TODO: Gán Adapter cho rvDetails với inDetails
-                } else {
-                    tvDetailTitle.setText("Chi tiết sản phẩm bán (Tổng: " + String.format("%,.0fđ", sales) + ")");
-                    // TODO: Gán Adapter cho rvDetails với outDetails
-                }
-            }
-            @Override
-            public void onNothingSelected() {}
-        });
-    }
-
-    // TÁC VỤ 2: Doanh thu ngày (LineChart + PieChart)
     private void loadDailyAnalytics() {
-        tvAnalyticsTitle.setText("Doanh thu hôm nay");
-        lineChart.setVisibility(View.VISIBLE);
+        tvAnalyticsTitle.setText("Doanh thu hom nay");
         findViewById(R.id.cardPieChart).setVisibility(View.VISIBLE);
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
         long startOfDay = cal.getTimeInMillis();
 
         db.collection(FirebaseConstants.COL_ORDERS)
                 .whereEqualTo("status", FirebaseConstants.STATUS_COMPLETED)
-                .whereGreaterThanOrEqualTo("timestamp", startOfDay)
-                .get().addOnSuccessListener(queryDocumentSnapshots -> {
-            
-            float[] hourlyRevenue = new float[24];
-            Map<String, Integer> productCounts = new HashMap<>();
-            double totalDay = 0;
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    float[] hourlyRevenue = new float[24];
+                    Map<String, Integer> productCounts = new HashMap<>();
+                    double totalDay = 0;
 
-            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                Order order = doc.toObject(Order.class);
-                totalDay += order.getTotalAmount();
-                
-                Calendar orderCal = Calendar.getInstance();
-                orderCal.setTimeInMillis(order.getTimestamp());
-                int hour = orderCal.get(Calendar.HOUR_OF_DAY);
-                hourlyRevenue[hour] += order.getTotalAmount();
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Order order = doc.toObject(Order.class);
+                        if (order.getTimestamp() < startOfDay) {
+                            continue;
+                        }
 
-                for (CartItem item : order.getItems()) {
-                    productCounts.put(item.getProductName(), productCounts.getOrDefault(item.getProductName(), 0) + item.getQuantity());
-                }
-            }
+                        totalDay += order.getTotalAmount();
 
-            tvTotalValue.setText(String.format(Locale.getDefault(), "%,.0fđ", totalDay));
-            showLineChart(hourlyRevenue, "Giờ trong ngày");
-            showPieChart(productCounts);
-        });
+                        Calendar orderCal = Calendar.getInstance();
+                        orderCal.setTimeInMillis(order.getTimestamp());
+                        int hour = orderCal.get(Calendar.HOUR_OF_DAY);
+                        hourlyRevenue[hour] += order.getTotalAmount();
+
+                        addProductCounts(productCounts, order);
+                    }
+
+                    tvTotalValue.setText(String.format(Locale.getDefault(), "%,.0fd", totalDay));
+                    showLineChart(hourlyRevenue, buildHourLabels(), "Doanh thu theo gio");
+                    showPieChart(productCounts);
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Loi tai thong ke: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    private void showLineChart(float[] dataPoints, String label) {
+    private void loadWeeklyMonthlyAnalytics() {
+        tvAnalyticsTitle.setText("Doanh thu 7 ngay qua");
+        findViewById(R.id.cardPieChart).setVisibility(View.VISIBLE);
+
+        Calendar start = Calendar.getInstance();
+        start.add(Calendar.DAY_OF_YEAR, -6);
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+
+        db.collection(FirebaseConstants.COL_ORDERS)
+                .whereEqualTo("status", FirebaseConstants.STATUS_COMPLETED)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    float[] dailyRevenue = new float[7];
+                    List<String> labels = buildSevenDayLabels();
+                    Map<String, Integer> productCounts = new HashMap<>();
+                    double totalPeriod = 0;
+
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Order order = doc.toObject(Order.class);
+                        int index = daysBetween(start.getTimeInMillis(), order.getTimestamp());
+                        if (index < 0 || index >= dailyRevenue.length) {
+                            continue;
+                        }
+
+                        totalPeriod += order.getTotalAmount();
+                        dailyRevenue[index] += order.getTotalAmount();
+                        addProductCounts(productCounts, order);
+                    }
+
+                    tvTotalValue.setText(String.format(Locale.getDefault(), "%,.0fd", totalPeriod));
+                    showLineChart(dailyRevenue, labels, "Doanh thu theo ngay");
+                    showPieChart(productCounts);
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Loi tai thong ke: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void addProductCounts(Map<String, Integer> productCounts, Order order) {
+        if (order.getItems() == null) return;
+
+        for (CartItem item : order.getItems()) {
+            String productName = item.getProductName() == null ? "Khac" : item.getProductName();
+            productCounts.put(productName, productCounts.getOrDefault(productName, 0) + item.getQuantity());
+        }
+    }
+
+    private void showLineChart(float[] dataPoints, List<String> labels, String label) {
         List<Entry> entries = new ArrayList<>();
         for (int i = 0; i < dataPoints.length; i++) {
             entries.add(new Entry(i, dataPoints[i]));
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "Doanh thu");
-        dataSet.setColor(Color.BLUE);
-        dataSet.setCircleColor(Color.BLUE);
+        LineDataSet dataSet = new LineDataSet(entries, label);
+        dataSet.setColor(Color.rgb(200, 157, 50));
+        dataSet.setCircleColor(Color.rgb(142, 110, 29));
         dataSet.setLineWidth(2f);
+        dataSet.setValueTextSize(10f);
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         dataSet.setDrawFilled(true);
-        dataSet.setFillColor(Color.CYAN);
+        dataSet.setFillColor(Color.rgb(229, 195, 110));
 
-        LineData lineData = new LineData(dataSet);
-        lineChart.setData(lineData);
+        lineChart.setData(new LineData(dataSet));
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.animateX(1000);
+        lineChart.getXAxis().setGranularity(1f);
+        lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+        lineChart.animateX(700);
         lineChart.invalidate();
     }
 
@@ -255,63 +294,45 @@ public class AnalyticsActivity extends AppCompatActivity {
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
-        dataSet.setColors(new int[]{Color.MAGENTA, Color.YELLOW, Color.CYAN, Color.GREEN, Color.LTGRAY});
+        dataSet.setColors(new int[]{
+                Color.rgb(200, 157, 50),
+                Color.rgb(102, 187, 106),
+                Color.rgb(63, 81, 181),
+                Color.rgb(239, 83, 80),
+                Color.rgb(78, 52, 46)
+        });
         dataSet.setValueTextSize(12f);
         dataSet.setValueTextColor(Color.BLACK);
 
-        PieData data = new PieData(dataSet);
-        pieChart.setData(data);
-        pieChart.setCenterText("Bán chạy");
-        pieChart.animateXY(1000, 1000);
+        pieChart.setData(new PieData(dataSet));
+        pieChart.setCenterText("Ban chay");
+        pieChart.animateXY(700, 700);
         pieChart.invalidate();
     }
 
-    // TÁC VỤ 3: Tuần/Tháng (Tương tự nhưng lọc thời gian)
-    private void loadWeeklyMonthlyAnalytics() {
-        // Có thể thêm Dialog chọn Tuần hoặc Tháng
-        tvAnalyticsTitle.setText("Doanh thu 7 ngày qua");
-        lineChart.setVisibility(View.VISIBLE);
-        findViewById(R.id.cardPieChart).setVisibility(View.VISIBLE);
+    private List<String> buildHourLabels() {
+        List<String> labels = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            labels.add(String.valueOf(i));
+        }
+        return labels;
+    }
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, -7);
-        long startOfPeriod = cal.getTimeInMillis();
+    private List<String> buildSevenDayLabels() {
+        List<String> labels = new ArrayList<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM", Locale.getDefault());
+        Calendar day = Calendar.getInstance();
+        day.add(Calendar.DAY_OF_YEAR, -6);
 
-        db.collection(FirebaseConstants.COL_ORDERS)
-                .whereEqualTo("status", FirebaseConstants.STATUS_COMPLETED)
-                .whereGreaterThanOrEqualTo("timestamp", startOfPeriod)
-                .get().addOnSuccessListener(queryDocumentSnapshots -> {
-            
-            Map<Integer, Float> dailyRevenue = new HashMap<>();
-            Map<String, Integer> productCounts = new HashMap<>();
-            double totalPeriod = 0;
+        for (int i = 0; i < 7; i++) {
+            labels.add(formatter.format(day.getTime()));
+            day.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        return labels;
+    }
 
-            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                Order order = doc.toObject(Order.class);
-                totalPeriod += order.getTotalAmount();
-                
-                Calendar orderCal = Calendar.getInstance();
-                orderCal.setTimeInMillis(order.getTimestamp());
-                int day = orderCal.get(Calendar.DAY_OF_MONTH);
-                dailyRevenue.put(day, dailyRevenue.getOrDefault(day, 0f) + (float)order.getTotalAmount());
-
-                for (CartItem item : order.getItems()) {
-                    productCounts.put(item.getProductName(), productCounts.getOrDefault(item.getProductName(), 0) + item.getQuantity());
-                }
-            }
-
-            tvTotalValue.setText(String.format(Locale.getDefault(), "%,.0fđ", totalPeriod));
-            
-            // Vẽ biểu đồ cho 7 ngày qua
-            List<Entry> entries = new ArrayList<>();
-            for (int i = 0; i < 7; i++) {
-                Calendar c = Calendar.getInstance();
-                c.add(Calendar.DAY_OF_YEAR, -i);
-                int day = c.get(Calendar.DAY_OF_MONTH);
-                entries.add(new Entry(6-i, dailyRevenue.getOrDefault(day, 0f)));
-            }
-            // Vẽ LineChart (tương tự showLineChart)
-            showPieChart(productCounts);
-        });
+    private int daysBetween(long startTimestamp, long orderTimestamp) {
+        long diff = orderTimestamp - startTimestamp;
+        return (int) (diff / (24L * 60L * 60L * 1000L));
     }
 }
