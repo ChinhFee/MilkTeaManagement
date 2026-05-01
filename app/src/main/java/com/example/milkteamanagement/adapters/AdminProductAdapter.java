@@ -24,6 +24,7 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
     public interface OnProductActionListener {
         void onEdit(Product product);
         void onDelete(Product product);
+        void onToggleAvailability(Product product, boolean isAvailable);
     }
 
     public AdminProductAdapter(List<Product> productList, OnProductActionListener listener) {
@@ -53,6 +54,17 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
                 .placeholder(R.drawable.img_placeholder)
                 .into(holder.imgProduct);
 
+        // Xử lý nút Switch
+        holder.switchAvailable.setOnCheckedChangeListener(null); // Tránh trigger loop
+        holder.switchAvailable.setChecked(product.isAvailable());
+        holder.switchAvailable.setText(product.isAvailable() ? "Còn" : "Hết");
+        
+        holder.switchAvailable.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            product.setAvailable(isChecked);
+            holder.switchAvailable.setText(isChecked ? "Còn" : "Hết");
+            listener.onToggleAvailability(product, isChecked);
+        });
+
         holder.btnEdit.setOnClickListener(v -> listener.onEdit(product));
         holder.btnDelete.setOnClickListener(v -> listener.onDelete(product));
     }
@@ -66,6 +78,7 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
         ImageView imgProduct;
         TextView tvName, tvCategory, tvPrice;
         ImageButton btnEdit, btnDelete;
+        androidx.appcompat.widget.SwitchCompat switchAvailable;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -75,6 +88,7 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
             tvPrice = itemView.findViewById(R.id.tvAdminProductPrice);
             btnEdit = itemView.findViewById(R.id.btnEditProduct);
             btnDelete = itemView.findViewById(R.id.btnDeleteProduct);
+            switchAvailable = itemView.findViewById(R.id.switchProductAvailable);
         }
     }
 }

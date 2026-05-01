@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@drawable/bg_white_rounded_24dp">
+    android:background="@drawable/bg_dialog_premium">
 
     <TextView
         android:id="@+id/tvDialogTitle"
@@ -73,6 +73,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Còn hàng"
+        android:buttonTint="@color/primaryColor"
+        android:textColor="@color/textColorPrimary"
         android:checked="true"
         android:layout_marginBottom="24dp"/>
 

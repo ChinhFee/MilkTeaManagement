@@ -82,6 +82,23 @@ public class ManageMenuActivity extends AppCompatActivity {
             public void onDelete(Product product) {
                 confirmDeleteProduct(product);
             }
+
+            @Override
+            public void onToggleAvailability(Product product, boolean isAvailable) {
+                menuRepository.updateProductAvailability(product.getId(), isAvailable, new ToppingRepository.ToppingCallback() {
+                    @Override
+                    public void onSuccess() {
+                        // Cập nhật thành công, không cần Toast rườm rà vì Switch đã thay đổi
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(ManageMenuActivity.this, "Lỗi cập nhật trạng thái: " + message, Toast.LENGTH_SHORT).show();
+                        // Rollback UI nếu lỗi
+                        loadData();
+                    }
+                });
+            }
         });
 
         toppingAdapter = new AdminToppingAdapter(toppingList, new AdminToppingAdapter.OnToppingActionListener() {
@@ -93,6 +110,22 @@ public class ManageMenuActivity extends AppCompatActivity {
             @Override
             public void onDelete(Topping topping) {
                 confirmDeleteTopping(topping);
+            }
+
+            @Override
+            public void onToggleAvailability(Topping topping, boolean isAvailable) {
+                toppingRepository.updateToppingAvailability(topping.getId(), isAvailable, new ToppingRepository.ToppingCallback() {
+                    @Override
+                    public void onSuccess() {
+                        // Cập nhật thành công
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(ManageMenuActivity.this, "Lỗi cập nhật topping: " + message, Toast.LENGTH_SHORT).show();
+                        loadData();
+                    }
+                });
             }
         });
 

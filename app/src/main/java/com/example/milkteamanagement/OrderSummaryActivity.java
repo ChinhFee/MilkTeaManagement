@@ -84,7 +84,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
             StringBuilder itemsStr = new StringBuilder();
             if (order.getItems() != null) {
                 for (CartItem item : order.getItems()) {
-                    itemsStr.append(item.getProductName()).append(" x").append(item.getQuantity()).append("\n");
+                    itemsStr.append(item.getProductName()).append(" (")
+                            .append(item.getSugar()).append("Đ, ")
+                            .append(item.getIce()).append("Đ) x")
+                            .append(item.getQuantity()).append("\n");
                 }
             }
             holder.tvItems.setText(itemsStr.toString().trim());
@@ -132,15 +135,17 @@ public class OrderSummaryActivity extends AppCompatActivity {
             int color;
             int textColor = Color.WHITE;
             
-            if (status.equals(FirebaseConstants.STATUS_PENDING)) {
-                color = ContextCompat.getColor(OrderSummaryActivity.this, R.color.successColor);
-            } else if (status.equals(FirebaseConstants.STATUS_PROCESSING)) {
-                color = ContextCompat.getColor(OrderSummaryActivity.this, R.color.errorColor);
-            } else if (status.equals(FirebaseConstants.STATUS_COMPLETED)) {
-                color = Color.parseColor("#C89D32"); // AuraBOBA Gold
+            // Đổi màu nền theo trạng thái để dễ quan sát
+            if (status.equalsIgnoreCase("PENDING")) {
+                color = Color.parseColor("#FFA000"); // Cam đậm (Đang chờ)
+            } else if (status.equalsIgnoreCase("PROCESSING")) {
+                color = Color.parseColor("#1976D2"); // Xanh dương (Đang làm)
+            } else if (status.equalsIgnoreCase("COMPLETED")) {
+                color = Color.parseColor("#388E3C"); // Xanh lá (Hoàn thành)
+            } else if (status.equalsIgnoreCase("CANCELLED")) {
+                color = Color.parseColor("#D32F2F"); // Đỏ (Đã hủy)
             } else {
-                color = Color.TRANSPARENT;
-                textColor = Color.BLACK;
+                color = Color.parseColor("#757575"); // Xám (Mặc định)
             }
             
             holder.statusContainer.setCardBackgroundColor(color);

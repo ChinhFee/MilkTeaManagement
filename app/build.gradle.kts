@@ -45,6 +45,8 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.gson)
     implementation(libs.swiperefreshlayout)
+    implementation(libs.generative.ai)
+    implementation(libs.guava)
     annotationProcessor(libs.glide.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

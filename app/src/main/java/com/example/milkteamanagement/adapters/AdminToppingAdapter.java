@@ -21,6 +21,7 @@ public class AdminToppingAdapter extends RecyclerView.Adapter<AdminToppingAdapte
     public interface OnToppingActionListener {
         void onEdit(Topping topping);
         void onDelete(Topping topping);
+        void onToggleAvailability(Topping topping, boolean isAvailable);
     }
 
     public AdminToppingAdapter(List<Topping> toppingList, OnToppingActionListener listener) {
@@ -43,6 +44,17 @@ public class AdminToppingAdapter extends RecyclerView.Adapter<AdminToppingAdapte
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         holder.tvPrice.setText("+ " + formatter.format(topping.getPrice()));
 
+        // Xử lý nút Switch
+        holder.switchAvailable.setOnCheckedChangeListener(null);
+        holder.switchAvailable.setChecked(topping.isAvailable());
+        holder.switchAvailable.setText(topping.isAvailable() ? "Còn" : "Hết");
+
+        holder.switchAvailable.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            topping.setAvailable(isChecked);
+            holder.switchAvailable.setText(isChecked ? "Còn" : "Hết");
+            listener.onToggleAvailability(topping, isChecked);
+        });
+
         holder.btnEdit.setOnClickListener(v -> listener.onEdit(topping));
         holder.btnDelete.setOnClickListener(v -> listener.onDelete(topping));
     }
@@ -55,6 +67,7 @@ public class AdminToppingAdapter extends RecyclerView.Adapter<AdminToppingAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvPrice;
         ImageButton btnEdit, btnDelete;
+        androidx.appcompat.widget.SwitchCompat switchAvailable;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,6 +75,7 @@ public class AdminToppingAdapter extends RecyclerView.Adapter<AdminToppingAdapte
             tvPrice = itemView.findViewById(R.id.tvAdminToppingPrice);
             btnEdit = itemView.findViewById(R.id.btnEditTopping);
             btnDelete = itemView.findViewById(R.id.btnDeleteTopping);
+            switchAvailable = itemView.findViewById(R.id.switchToppingAvailable);
         }
     }
 }

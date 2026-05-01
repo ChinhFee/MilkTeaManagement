@@ -28,8 +28,8 @@ import java.util.Locale;
 public class ProductDetailActivity extends AppCompatActivity {
 
     private ImageView imgProductDetail;
-    private TextView tvProductName, tvProductPrice, tvQuantity;
-    private RadioGroup rgSize;
+    private TextView tvProductName, tvProductPrice, tvQuantity, tvTotalPriceBottom;
+    private RadioGroup rgSize, rgSugar, rgIce;
     private RadioButton rbSizeM, rbSizeL;
     private RecyclerView rvToppings;
     private Button btnAddToCart;
@@ -59,7 +59,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvProductName = findViewById(R.id.tvProductNameDetail);
         tvProductPrice = findViewById(R.id.tvProductPriceDetail);
         tvQuantity = findViewById(R.id.tvQuantity);
+        tvTotalPriceBottom = findViewById(R.id.tvTotalPriceBottom);
         rgSize = findViewById(R.id.rgSize);
+        rgSugar = findViewById(R.id.rgSugar);
+        rgIce = findViewById(R.id.rgIce);
         rbSizeM = findViewById(R.id.rbSizeM);
         rbSizeL = findViewById(R.id.rbSizeL);
         rvToppings = findViewById(R.id.rvToppings);
@@ -97,6 +100,10 @@ public class ProductDetailActivity extends AppCompatActivity {
                 tvProductPrice.setText("Liên hệ");
             }
 
+            updateTotalPrice();
+
+            rgSize.setOnCheckedChangeListener((group, checkedId) -> updateTotalPrice());
+
             String imageUrl = product.getImageUrl();
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 String directLink = driveRepository.convertToDirectLink(imageUrl);
@@ -123,7 +130,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 for (Topping t : toppings) {
                     if (t.isAvailable()) availableToppings.add(t);
                 }
-                toppingAdapter = new ToppingAdapter(availableToppings);
+                toppingAdapter = new ToppingAdapter(availableToppings, () -> updateTotalPrice());
                 rvToppings.setAdapter(toppingAdapter);
             }
 
@@ -138,19 +145,55 @@ public class ProductDetailActivity extends AppCompatActivity {
         btnIncrease.setOnClickListener(v -> {
             quantity++;
             tvQuantity.setText(String.valueOf(quantity));
+            updateTotalPrice();
         });
 
         btnDecrease.setOnClickListener(v -> {
             if (quantity > 1) {
                 quantity--;
                 tvQuantity.setText(String.valueOf(quantity));
+                updateTotalPrice();
             }
         });
+    }
+
+    private void updateTotalPrice() {
+        if (product == null) return;
+        
+        double basePrice = product.getPrice();
+        double sizePrice = rbSizeL.isChecked() ? 5000 : 0;
+        
+        double toppingPrice = 0;
+        if (toppingAdapter != null) {
+            for (Topping t : toppingAdapter.getSelectedToppings()) {
+                toppingPrice += t.getPrice();
+            }
+        }
+        
+        double total = (basePrice + sizePrice + toppingPrice) * quantity;
+        tvTotalPriceBottom.setText(String.format(Locale.getDefault(), "%,.0f VNĐ", total));
     }
 
     private void setupAddToCart() {
         btnAddToCart.setOnClickListener(v -> {
             String size = rbSizeM.isChecked() ? "M" : "L";
+            
+            int sugarId = rgSugar.getCheckedRadioButtonId();
+            String sugar = "50%"; // Default
+            if (sugarId == R.id.sugar0) sugar = "0%";
+            else if (sugarId == R.id.sugar30) sugar = "30%";
+            else if (sugarId == R.id.sugar50) sugar = "50%";
+            else if (sugarId == R.id.sugar70) sugar = "70%";
+            else if (sugarId == R.id.sugar100) sugar = "100%";
+
+            int iceId = rgIce.getCheckedRadioButtonId();
+            String ice = "50%"; // Default
+            if (iceId == R.id.ice0) ice = "0%";
+            else if (iceId == R.id.ice30) ice = "30%";
+            else if (iceId == R.id.ice50) ice = "50%";
+            else if (iceId == R.id.ice70) ice = "70%";
+            else if (iceId == R.id.ice100) ice = "100%";
+
             List<Topping> selectedToppings = toppingAdapter.getSelectedToppings();
 
             CartItem cartItem = new CartItem(
@@ -159,6 +202,8 @@ public class ProductDetailActivity extends AppCompatActivity {
                     product.getImageUrl(),
                     quantity,
                     size,
+                    sugar,
+                    ice,
                     selectedToppings,
                     product.getPrice()
             );

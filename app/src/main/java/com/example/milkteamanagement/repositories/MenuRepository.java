@@ -42,6 +42,12 @@ public class MenuRepository {
         });
     }
 
+    public void updateProductAvailability(String productId, boolean isAvailable, ToppingRepository.ToppingCallback callback) {
+        productsRef.document(productId).update("isAvailable", isAvailable)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
     public void upsertProduct(Product product, ToppingRepository.ToppingCallback callback) {
         String id = (product.getId() == null || product.getId().isEmpty())
                 ? productsRef.document().getId()

@@ -16,9 +16,15 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
 
     private final List<Topping> toppingList;
     private final List<Topping> selectedToppings = new ArrayList<>();
+    private OnToppingChangeListener listener;
 
-    public ToppingAdapter(List<Topping> toppingList) {
+    public interface OnToppingChangeListener {
+        void onToppingChanged();
+    }
+
+    public ToppingAdapter(List<Topping> toppingList, OnToppingChangeListener listener) {
         this.toppingList = toppingList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -39,9 +45,14 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
 
         holder.cbTopping.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                selectedToppings.add(topping);
+                if (!selectedToppings.contains(topping)) {
+                    selectedToppings.add(topping);
+                }
             } else {
                 selectedToppings.remove(topping);
+            }
+            if (listener != null) {
+                listener.onToppingChanged();
             }
         });
     }
