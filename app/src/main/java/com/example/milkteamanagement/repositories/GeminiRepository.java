@@ -23,13 +23,14 @@ public class GeminiRepository {
                         "Nếu khách hỏi món không có trong menu, hãy khéo léo gợi ý món tương tự.")
                 .build();
 
-        // Sử dụng gemini-1.5-flash trên endpoint v1 là cấu hình chuẩn nhất hiện tại
+        // Quay lại v1beta để sử dụng được tính năng systemInstruction (vai trò trợ lý)
+        // Đây là cấu hình chuẩn cho Gemini 1.5 Flash trên Android SDK
         GenerativeModel gm = new GenerativeModel(
                 "gemini-1.5-flash", 
                 apiKey,
                 null,               // generationConfig
                 null,               // safetySettings
-                new RequestOptions(60000L, "v1"), // Timeout 60s, API v1
+                new RequestOptions(60000L, "v1beta"), // Bắt buộc dùng v1beta cho systemInstruction
                 null,               // tools
                 null,               // toolConfig
                 systemInstruction   // systemInstruction
