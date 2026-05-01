@@ -86,15 +86,29 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 pViewHolder.imgProduct.setImageResource(R.drawable.img_placeholder);
             }
 
-            holder.itemView.setOnClickListener(v -> {
-                try {
-                    Intent intent = new Intent(v.getContext(), ProductDetailActivity.class);
-                    intent.putExtra("product_json", new Gson().toJson(product));
-                    v.getContext().startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+            // Xử lý hiển thị Hết hàng
+            if (product.isAvailable()) {
+                pViewHolder.viewOutStock.setVisibility(View.GONE);
+                pViewHolder.tvOutStock.setVisibility(View.GONE);
+                holder.itemView.setAlpha(1.0f);
+                holder.itemView.setEnabled(true);
+                
+                holder.itemView.setOnClickListener(v -> {
+                    try {
+                        Intent intent = new Intent(v.getContext(), ProductDetailActivity.class);
+                        intent.putExtra("product_json", new Gson().toJson(product));
+                        v.getContext().startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            } else {
+                pViewHolder.viewOutStock.setVisibility(View.VISIBLE);
+                pViewHolder.tvOutStock.setVisibility(View.VISIBLE);
+                holder.itemView.setAlpha(0.6f);
+                holder.itemView.setEnabled(false);
+                holder.itemView.setOnClickListener(null);
+            }
         }
     }
 
@@ -113,13 +127,16 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProduct;
-        TextView tvName, tvPrice;
+        TextView tvName, tvPrice, tvOutStock;
+        View viewOutStock;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             imgProduct = itemView.findViewById(R.id.imgProduct);
             tvName = itemView.findViewById(R.id.tvProductName);
             tvPrice = itemView.findViewById(R.id.tvProductPrice);
+            tvOutStock = itemView.findViewById(R.id.tvOutStock);
+            viewOutStock = itemView.findViewById(R.id.viewOutStock);
         }
     }
 }

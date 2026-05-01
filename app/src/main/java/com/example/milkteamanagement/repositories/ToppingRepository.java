@@ -35,6 +35,12 @@ public class ToppingRepository {
                 });
     }
 
+    public void updateToppingAvailability(String toppingId, boolean isAvailable, ToppingCallback callback) {
+        db.collection(FirebaseConstants.COL_TOPPINGS).document(toppingId).update("isAvailable", isAvailable)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
     public void upsertTopping(Topping topping, ToppingCallback callback) {
         String id = (topping.getId() == null || topping.getId().isEmpty())
                 ? db.collection(FirebaseConstants.COL_TOPPINGS).document().getId()
@@ -42,6 +48,12 @@ public class ToppingRepository {
         topping.setId(id);
 
         db.collection(FirebaseConstants.COL_TOPPINGS).document(id).set(topping)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    public void deleteTopping(String toppingId, ToppingCallback callback) {
+        db.collection(FirebaseConstants.COL_TOPPINGS).document(toppingId).delete()
                 .addOnSuccessListener(aVoid -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }

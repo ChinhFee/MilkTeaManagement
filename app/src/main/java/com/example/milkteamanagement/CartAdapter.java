@@ -66,8 +66,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
         
         StringBuilder options = new StringBuilder("Size " + item.getSize());
+        options.append(", ").append(item.getSugar()).append(" Đường");
+        options.append(", ").append(item.getIce()).append(" Đá");
+
         if (item.getToppings() != null && !item.getToppings().isEmpty()) {
-            options.append(", ");
+            options.append("\nTopping: ");
             for (int i = 0; i < item.getToppings().size(); i++) {
                 options.append(item.getToppings().get(i).getName());
                 if (i < item.getToppings().size() - 1) options.append(", ");
