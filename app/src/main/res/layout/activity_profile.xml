@@ -120,6 +120,21 @@
         app:cornerRadius="12dp" />
 
     <Button
+        android:id="@+id/btnOrderTracking"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="12dp"
+        android:text="Theo dõi đơn hàng"
+        android:textAllCaps="false"
+        android:textColor="@color/primaryColor"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="12dp"
+        app:strokeColor="@color/primaryColor" />
+
+    <Button
         android:id="@+id/btnOrderHistory"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="match_parent"

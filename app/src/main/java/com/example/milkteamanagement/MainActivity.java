@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Khởi tạo hoặc cập nhật Gemini với menu mới
                 if (geminiRepository == null) {
-                    geminiRepository = new GeminiRepository("AIzaSyB8HK3Zk6gGOAtO_c1-QsJ0sW2qj6Er0qs", menuStr.toString());
+                    geminiRepository = new GeminiRepository(BuildConfig.GEMINI_API_KEY, menuStr.toString());
                 }
                 
                 setupTabs(products);

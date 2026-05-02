@@ -37,17 +37,20 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order order = orders.get(position);
         
-        holder.tvOrderId.setText("Mã ĐH: " + order.getOrderId().substring(0, Math.min(order.getOrderId().length(), 8)).toUpperCase());
+        String orderId = order.getOrderId() == null ? "" : order.getOrderId();
+        holder.tvOrderId.setText("Mã ĐH: " + orderId.substring(0, Math.min(orderId.length(), 8)).toUpperCase());
         holder.tvOrderDate.setText(dateFormat.format(new Date(order.getTimestamp())));
         holder.tvOrderTotal.setText(formatter.format(order.getTotalAmount()));
         holder.tvOrderStatus.setText(order.getStatus());
 
         StringBuilder itemsSummary = new StringBuilder();
-        for (int i = 0; i < order.getItems().size(); i++) {
-            CartItem item = order.getItems().get(i);
-            itemsSummary.append(item.getQuantity()).append("x ").append(item.getProductName());
-            if (i < order.getItems().size() - 1) {
-                itemsSummary.append(", ");
+        if (order.getItems() != null) {
+            for (int i = 0; i < order.getItems().size(); i++) {
+                CartItem item = order.getItems().get(i);
+                itemsSummary.append(item.getQuantity()).append("x ").append(item.getProductName());
+                if (i < order.getItems().size() - 1) {
+                    itemsSummary.append(", ");
+                }
             }
         }
         holder.tvOrderItems.setText(itemsSummary.toString());
@@ -60,6 +63,9 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
                 break;
             case FirebaseConstants.STATUS_COMPLETED:
                 statusColorRes = android.R.color.holo_green_dark;
+                break;
+            case FirebaseConstants.STATUS_SHIPPED:
+                statusColorRes = android.R.color.holo_blue_dark;
                 break;
             case FirebaseConstants.STATUS_CANCELLED:
                 statusColorRes = R.color.errorColor;

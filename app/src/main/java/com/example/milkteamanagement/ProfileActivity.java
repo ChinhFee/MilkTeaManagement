@@ -79,6 +79,10 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.btnOrderHistory).setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, OrderHistoryActivity.class));
         });
+
+        findViewById(R.id.btnOrderTracking).setOnClickListener(v -> {
+            startActivity(new Intent(ProfileActivity.this, OrderTrackingActivity.class));
+        });
     }
 
     private void loadUserProfile() {

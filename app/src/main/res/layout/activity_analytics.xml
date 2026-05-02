@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Thong ke va Bao cao"
+            android:text="Thống kê và Báo cáo"
             android:textColor="@color/textColorPrimary"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -41,12 +41,12 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hang ngay" />
+            android:text="Hằng ngày" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tuan/Thang" />
+            android:text="Tuần/Tháng" />
     </com.google.android.material.tabs.TabLayout>
 
     <FrameLayout
@@ -81,7 +81,7 @@
                             android:id="@+id/tvAnalyticsTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tong doanh thu"
+                            android:text="Tổng doanh thu"
                             android:textColor="@color/textColorSecondary"
                             android:textSize="14sp" />
 
@@ -89,18 +89,10 @@
                             android:id="@+id/tvTotalValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0d"
+                            android:text="0đ"
                             android:textColor="@color/primaryDarkColor"
                             android:textSize="24sp"
                             android:textStyle="bold" />
-
-                        <Button
-                            android:id="@+id/btnSeedOrders"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Tao don test"
-                            android:textAllCaps="false" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 

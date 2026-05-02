@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.milkteamanagement.models.Order;
 import com.example.milkteamanagement.repositories.AuthRepository;
+import com.example.milkteamanagement.repositories.FirebaseConstants;
 import com.example.milkteamanagement.repositories.OrderHistoryRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderHistoryActivity extends AppCompatActivity {
 
@@ -65,13 +67,18 @@ public class OrderHistoryActivity extends AppCompatActivity {
                 swipeRefresh.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
                 
-                if (orders.isEmpty()) {
+                List<Order> finishedOrders = orders.stream()
+                        .filter(order -> FirebaseConstants.STATUS_COMPLETED.equals(order.getStatus())
+                                || FirebaseConstants.STATUS_CANCELLED.equals(order.getStatus()))
+                        .collect(Collectors.toList());
+
+                if (finishedOrders.isEmpty()) {
                     llEmpty.setVisibility(View.VISIBLE);
                     rvOrderHistory.setVisibility(View.GONE);
                 } else {
                     llEmpty.setVisibility(View.GONE);
                     rvOrderHistory.setVisibility(View.VISIBLE);
-                    adapter.updateList(orders);
+                    adapter.updateList(finishedOrders);
                 }
             }
 

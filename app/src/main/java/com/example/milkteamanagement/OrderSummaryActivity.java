@@ -17,6 +17,7 @@ import com.example.milkteamanagement.models.CartItem;
 import com.example.milkteamanagement.models.Order;
 import com.example.milkteamanagement.repositories.FirebaseConstants;
 import com.example.milkteamanagement.repositories.OrderRepository;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -60,6 +61,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
     private class OrderSummaryAdapter extends RecyclerView.Adapter<OrderSummaryAdapter.ViewHolder> {
         private final List<Order> orders;
         private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        private final DecimalFormat currencyFormatter = new DecimalFormat("#,###đ");
 
         public OrderSummaryAdapter(List<Order> orders) {
             this.orders = orders;
@@ -75,18 +77,19 @@ public class OrderSummaryActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             Order order = orders.get(holder.getBindingAdapterPosition());
-            holder.tvId.setText("#" + order.getOrderId().substring(0, 8).toUpperCase());
+            String orderId = order.getOrderId() == null ? "" : order.getOrderId();
+            holder.tvId.setText("#" + orderId.substring(0, Math.min(orderId.length(), 8)).toUpperCase());
             holder.tvStatus.setText(getStatusText(order.getStatus()));
             holder.tvCustomer.setText(order.getCustomerName());
             holder.tvTime.setText(dateFormat.format(new Date(order.getTimestamp())));
-            holder.tvAmount.setText(String.format(Locale.getDefault(), "$%.2f", order.getTotalAmount()));
+            holder.tvAmount.setText(currencyFormatter.format(order.getTotalAmount()));
 
             StringBuilder itemsStr = new StringBuilder();
             if (order.getItems() != null) {
                 for (CartItem item : order.getItems()) {
                     itemsStr.append(item.getProductName()).append(" (")
-                            .append(item.getSugar()).append("Đ, ")
-                            .append(item.getIce()).append("Đ) x")
+                            .append(item.getSugar()).append(", ")
+                            .append(item.getIce()).append(") x")
                             .append(item.getQuantity()).append("\n");
                 }
             }
@@ -95,9 +98,9 @@ public class OrderSummaryActivity extends AppCompatActivity {
             updateStatusUI(holder, order.getStatus());
 
             holder.tvId.setOnClickListener(v -> {
-                String details = "Customer: " + order.getCustomerName() + 
-                               "\nPhone: " + order.getCustomerPhone() + 
-                               "\nNote: " + (order.getNote() != null ? order.getNote() : "N/A");
+                String details = "Khách hàng: " + order.getCustomerName() +
+                               "\nSĐT: " + order.getCustomerPhone() +
+                               "\nGhi chú: " + (order.getNote() != null ? order.getNote() : "Không có");
                 Toast.makeText(OrderSummaryActivity.this, details, Toast.LENGTH_LONG).show();
             });
 
@@ -119,15 +122,13 @@ public class OrderSummaryActivity extends AppCompatActivity {
         }
 
         private String getStatusText(String status) {
-            if (status.equals(FirebaseConstants.STATUS_PENDING)) return "PENDING";
-            if (status.equals(FirebaseConstants.STATUS_PROCESSING)) return "PROCESSING";
-            if (status.equals(FirebaseConstants.STATUS_COMPLETED)) return "COMPLETED";
-            return status.toUpperCase();
+            return status == null ? "" : status;
         }
 
         private String getNextStatus(String currentStatus) {
-            if (currentStatus.equals(FirebaseConstants.STATUS_PENDING)) return FirebaseConstants.STATUS_PROCESSING;
-            if (currentStatus.equals(FirebaseConstants.STATUS_PROCESSING)) return FirebaseConstants.STATUS_COMPLETED;
+            if (FirebaseConstants.STATUS_PENDING.equals(currentStatus)) return FirebaseConstants.STATUS_PROCESSING;
+            if (FirebaseConstants.STATUS_PROCESSING.equals(currentStatus)) return FirebaseConstants.STATUS_SHIPPED;
+            if (FirebaseConstants.STATUS_SHIPPED.equals(currentStatus)) return FirebaseConstants.STATUS_COMPLETED;
             return FirebaseConstants.STATUS_PENDING;
         }
 
@@ -135,17 +136,18 @@ public class OrderSummaryActivity extends AppCompatActivity {
             int color;
             int textColor = Color.WHITE;
             
-            // Đổi màu nền theo trạng thái để dễ quan sát
-            if (status.equalsIgnoreCase("PENDING")) {
-                color = Color.parseColor("#FFA000"); // Cam đậm (Đang chờ)
-            } else if (status.equalsIgnoreCase("PROCESSING")) {
-                color = Color.parseColor("#1976D2"); // Xanh dương (Đang làm)
-            } else if (status.equalsIgnoreCase("COMPLETED")) {
-                color = Color.parseColor("#388E3C"); // Xanh lá (Hoàn thành)
-            } else if (status.equalsIgnoreCase("CANCELLED")) {
-                color = Color.parseColor("#D32F2F"); // Đỏ (Đã hủy)
+            if (FirebaseConstants.STATUS_PENDING.equals(status)) {
+                color = Color.parseColor("#FFA000");
+            } else if (FirebaseConstants.STATUS_PROCESSING.equals(status)) {
+                color = Color.parseColor("#1976D2");
+            } else if (FirebaseConstants.STATUS_SHIPPED.equals(status)) {
+                color = Color.parseColor("#00897B");
+            } else if (FirebaseConstants.STATUS_COMPLETED.equals(status)) {
+                color = Color.parseColor("#388E3C");
+            } else if (FirebaseConstants.STATUS_CANCELLED.equals(status)) {
+                color = Color.parseColor("#D32F2F");
             } else {
-                color = Color.parseColor("#757575"); // Xám (Mặc định)
+                color = Color.parseColor("#757575");
             }
             
             holder.statusContainer.setCardBackgroundColor(color);

@@ -52,6 +52,9 @@
         <activity
             android:name=".OrderHistoryActivity"
             android:exported="false" />
+        <activity
+            android:name=".OrderTrackingActivity"
+            android:exported="false" />
 
         <activity
             android:name=".ProfileActivity"

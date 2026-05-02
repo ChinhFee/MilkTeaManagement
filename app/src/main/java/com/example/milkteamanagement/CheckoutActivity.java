@@ -120,6 +120,7 @@ public class CheckoutActivity extends AppCompatActivity {
             @Override
             public void onSuccess() {
                 progressBar.setVisibility(View.GONE);
+                cartManager.clearCart();
                 Toast.makeText(CheckoutActivity.this, "Đặt hàng thành công!", Toast.LENGTH_LONG).show();
                 finishAffinity();
                 startActivity(new android.content.Intent(CheckoutActivity.this, MainActivity.class));
