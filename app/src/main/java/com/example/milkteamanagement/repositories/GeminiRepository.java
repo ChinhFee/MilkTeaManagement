@@ -1,6 +1,5 @@
 package com.example.milkteamanagement.repositories;
 
-import android.util.Log;
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.ChatFutures;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
@@ -15,27 +14,36 @@ public class GeminiRepository {
     private final GenerativeModelFutures model;
     private ChatFutures chatContext;
     private final String menuData;
+    private final String inventoryData;
 
     public GeminiRepository(String apiKey, String menuData) {
-        this.menuData = menuData;
-        Log.d("GeminiRepository", "Initializing Gemini 1.5 Flash on v1beta endpoint");
+        this(apiKey, menuData, "Dữ liệu kho đang được cập nhật...");
+    }
 
-        // Thiết lập System Instruction (Vai trò hệ thống)
-        Content.Builder systemBuilder = new Content.Builder();
-        systemBuilder.setRole("system"); 
-        systemBuilder.addText("Bạn là trợ lý ảo của quán trà sữa AuraBOBA (sang trọng Gold/Dark). " +
-                "Đây là menu của quán: " + menuData + ". " +
-                "Hãy trả lời ngắn gọn, lịch sự. Nếu khách hỏi món không có, hãy gợi ý món tương tự.");
-        Content systemInstruction = systemBuilder.build();
+    public GeminiRepository(String apiKey, String menuData, String inventoryData) {
+        this.menuData = menuData;
+        this.inventoryData = inventoryData;
+
+        RequestOptions requestOptions = new RequestOptions(60000L, "v1beta");
+
+        // System Instruction: Dạy cho AI biết về Menu và Kho hàng
+        Content systemInstruction = new Content.Builder()
+                .addText("Bạn là trợ lý ảo AuraAI của quán trà sữa AuraBOBA.\n" +
+                        "1. MENU CỦA QUÁN: " + menuData + "\n" +
+                        "2. TÌNH TRẠNG KHO HÀNG HIỆN TẠI: " + inventoryData + "\n" +
+                        "NHIỆM VỤ:\n" +
+                        "- Trả lời ngắn gọn, lịch sự, thân thiện.\n" +
+                        "- Nếu khách hỏi về món ăn, hãy tư vấn dựa trên menu.\n" +
+                        "- Nếu chủ quán (Admin) hỏi về kho, hãy báo cáo dựa trên số liệu kho. Cảnh báo nếu có nguyên liệu sắp hết (đỏ).\n" +
+                        "- Luôn trả lời bằng tiếng Việt.")
+                .build();
 
         GenerativeModel gm = new GenerativeModel(
-                "gemini-1.5-flash", // Thử model name chuẩn
+                "gemini-1.5-flash",
                 apiKey,
-                null,               // generationConfig
-                null,               // safetySettings
-                new RequestOptions(60000L, "v1beta"), // Chuyển sang v1beta
-                null,               // tools
-                null,               // toolConfig
+                null, null,
+                requestOptions,
+                null, null,
                 systemInstruction
         );
 
@@ -44,15 +52,11 @@ public class GeminiRepository {
     }
 
     private ChatFutures initChat() {
-        // Sau khi đã dùng systemInstruction, lịch sử ban đầu có thể để trống
-        List<Content> history = new ArrayList<>();
-        return model.startChat(history);
+        return model.startChat(new ArrayList<>());
     }
 
     public ListenableFuture<GenerateContentResponse> sendMessage(String userPrompt) {
-        Content content = new Content.Builder()
-                .addText(userPrompt)
-                .build();
+        Content content = new Content.Builder().addText(userPrompt).build();
         return chatContext.sendMessage(content);
     }
 

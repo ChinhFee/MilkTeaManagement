@@ -13,9 +13,15 @@
 #}
 
 # Uncomment this to preserve the line number information for
-# debugging stack traces.
+# debugging trace.
 #-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Google Generative AI SDK
+-keep class com.google.ai.client.generativeai.** { *; }
+-keep class kotlinx.serialization.json.** { *; }
+-keepattributes *Annotation*, Signature, InnerClasses
+-dontwarn com.google.ai.client.generativeai.**

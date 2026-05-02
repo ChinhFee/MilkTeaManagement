@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.milkteamanagement.models.CartItem;
@@ -52,7 +51,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(OrderSummaryActivity.this, "Access Denied: " + message, Toast.LENGTH_LONG).show();
+                Toast.makeText(OrderSummaryActivity.this, "Lỗi truy cập: " + message, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -76,7 +75,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             Order order = orders.get(holder.getBindingAdapterPosition());
             holder.tvId.setText("#" + order.getOrderId().substring(0, 8).toUpperCase());
-            holder.tvStatus.setText(getStatusText(order.getStatus()));
+            holder.tvStatus.setText(getStatusDisplayText(order.getStatus()));
             holder.tvCustomer.setText(order.getCustomerName());
             holder.tvTime.setText(dateFormat.format(new Date(order.getTimestamp())));
             holder.tvAmount.setText(String.format(Locale.getDefault(), "$%.2f", order.getTotalAmount()));
@@ -95,9 +94,9 @@ public class OrderSummaryActivity extends AppCompatActivity {
             updateStatusUI(holder, order.getStatus());
 
             holder.tvId.setOnClickListener(v -> {
-                String details = "Customer: " + order.getCustomerName() + 
-                               "\nPhone: " + order.getCustomerPhone() + 
-                               "\nNote: " + (order.getNote() != null ? order.getNote() : "N/A");
+                String details = "Khách: " + order.getCustomerName() +
+                        "\nSĐT: " + order.getCustomerPhone() +
+                        "\nGhi chú: " + (order.getNote() != null ? order.getNote() : "N/A");
                 Toast.makeText(OrderSummaryActivity.this, details, Toast.LENGTH_LONG).show();
             });
 
@@ -118,10 +117,11 @@ public class OrderSummaryActivity extends AppCompatActivity {
             });
         }
 
-        private String getStatusText(String status) {
-            if (status.equals(FirebaseConstants.STATUS_PENDING)) return "PENDING";
-            if (status.equals(FirebaseConstants.STATUS_PROCESSING)) return "PROCESSING";
-            if (status.equals(FirebaseConstants.STATUS_COMPLETED)) return "COMPLETED";
+        private String getStatusDisplayText(String status) {
+            if (status.equals(FirebaseConstants.STATUS_PENDING)) return "ĐANG CHỜ";
+            if (status.equals(FirebaseConstants.STATUS_PROCESSING)) return "ĐANG LÀM";
+            if (status.equals(FirebaseConstants.STATUS_COMPLETED)) return "HOÀN THÀNH";
+            if (status.equals(FirebaseConstants.STATUS_CANCELLED)) return "ĐÃ HỦY";
             return status.toUpperCase();
         }
 
@@ -133,23 +133,19 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
         private void updateStatusUI(ViewHolder holder, String status) {
             int color;
-            int textColor = Color.WHITE;
-            
-            // Đổi màu nền theo trạng thái để dễ quan sát
-            if (status.equalsIgnoreCase("PENDING")) {
-                color = Color.parseColor("#FFA000"); // Cam đậm (Đang chờ)
-            } else if (status.equalsIgnoreCase("PROCESSING")) {
-                color = Color.parseColor("#1976D2"); // Xanh dương (Đang làm)
-            } else if (status.equalsIgnoreCase("COMPLETED")) {
-                color = Color.parseColor("#388E3C"); // Xanh lá (Hoàn thành)
-            } else if (status.equalsIgnoreCase("CANCELLED")) {
-                color = Color.parseColor("#D32F2F"); // Đỏ (Đã hủy)
+            if (status.equals(FirebaseConstants.STATUS_PENDING)) {
+                color = Color.parseColor("#FFA000");
+            } else if (status.equals(FirebaseConstants.STATUS_PROCESSING)) {
+                color = Color.parseColor("#1976D2");
+            } else if (status.equals(FirebaseConstants.STATUS_COMPLETED)) {
+                color = Color.parseColor("#388E3C");
+            } else if (status.equals(FirebaseConstants.STATUS_CANCELLED)) {
+                color = Color.parseColor("#D32F2F");
             } else {
-                color = Color.parseColor("#757575"); // Xám (Mặc định)
+                color = Color.parseColor("#757575");
             }
-            
             holder.statusContainer.setCardBackgroundColor(color);
-            holder.tvStatus.setTextColor(textColor);
+            holder.tvStatus.setTextColor(Color.WHITE);
         }
 
         @Override

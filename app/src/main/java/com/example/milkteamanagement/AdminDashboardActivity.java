@@ -19,6 +19,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         tvAdminGreeting = findViewById(R.id.tvAdminGreeting);
         CardView cardManageMenu = findViewById(R.id.cardManageMenu);
         CardView cardManageOrders = findViewById(R.id.cardManageOrders);
+        CardView cardMaterials = findViewById(R.id.cardMaterials);
         CardView cardAnalytics = findViewById(R.id.cardAnalytics);
         CardView cardLogout = findViewById(R.id.cardLogout);
 
@@ -27,6 +28,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         cardManageMenu.setOnClickListener(v -> startActivity(new Intent(this, ManageMenuActivity.class)));
         cardManageOrders.setOnClickListener(v -> startActivity(new Intent(this, ManageOrdersActivity.class)));
+        cardMaterials.setOnClickListener(v -> startActivity(new Intent(this, ManageMaterialsActivity.class)));
         cardAnalytics.setOnClickListener(v -> startActivity(new Intent(this, AnalyticsActivity.class)));
 
         cardLogout.setOnClickListener(v -> {

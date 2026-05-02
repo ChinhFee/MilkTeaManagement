@@ -14,6 +14,7 @@ public class Order {
     private String paymentMethod; 
     private long timestamp;
     private String note;
+    private boolean materialsDeducted; // Cờ hiệu để biết đã trừ kho chưa
 
     public Order() {}
 
@@ -29,6 +30,7 @@ public class Order {
         this.paymentMethod = paymentMethod;
         this.timestamp = timestamp;
         this.note = note;
+        this.materialsDeducted = false;
     }
 
     public String getOrderId() { return orderId; }
@@ -63,4 +65,7 @@ public class Order {
 
     public String getNote() { return note; }
     public void setNote(String note) { this.note = note; }
+
+    public boolean isMaterialsDeducted() { return materialsDeducted; }
+    public void setMaterialsDeducted(boolean materialsDeducted) { this.materialsDeducted = materialsDeducted; }
 }

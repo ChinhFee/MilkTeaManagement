@@ -1,5 +1,7 @@
 package com.example.milkteamanagement.models;
 
+import java.util.List;
+
 public class Product {
     private String id;
     private String name;
@@ -7,6 +9,7 @@ public class Product {
     private String category;
     private String imageUrl;
     private boolean isAvailable;
+    private List<RecipeItem> recipe;
 
     public Product() {}
 
@@ -36,4 +39,7 @@ public class Product {
 
     public boolean isAvailable() { return isAvailable; }
     public void setAvailable(boolean available) { isAvailable = available; }
+
+    public List<RecipeItem> getRecipe() { return recipe; }
+    public void setRecipe(List<RecipeItem> recipe) { this.recipe = recipe; }
 }

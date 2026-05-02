@@ -1,10 +1,13 @@
 package com.example.milkteamanagement.models;
 
+import java.util.List;
+
 public class Topping {
     private String id;
     private String name;
     private int price;
     private boolean isAvailable;
+    private List<RecipeItem> recipe;
 
     public Topping() {
     }
@@ -46,5 +49,13 @@ public class Topping {
 
     public void setAvailable(boolean available) {
         isAvailable = available;
+    }
+
+    public List<RecipeItem> getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(List<RecipeItem> recipe) {
+        this.recipe = recipe;
     }
 }

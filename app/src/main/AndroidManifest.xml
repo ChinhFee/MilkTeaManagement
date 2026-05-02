@@ -82,6 +82,14 @@
             android:name=".TableMapActivity"
             android:exported="false" />
 
+        <!-- Material Management -->
+        <activity
+            android:name=".ManageMaterialsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RestockActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
