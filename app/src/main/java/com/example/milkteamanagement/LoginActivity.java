@@ -76,8 +76,10 @@ public class LoginActivity extends AppCompatActivity {
                 User user = task.getResult();
                 updateFCMToken(user.getUid()); // Cập nhật token khi đăng nhập thành công
                 if ("admin".equalsIgnoreCase(user.getRole())) {
+                    FirebaseMessaging.getInstance().subscribeToTopic("admins");
                     startActivity(new Intent(LoginActivity.this, AdminDashboardActivity.class));
                 } else {
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic("admins");
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
                 finish();

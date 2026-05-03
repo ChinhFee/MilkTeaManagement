@@ -110,6 +110,11 @@ public class OrderSummaryActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess() {
                         order.setStatus(nextStatus);
+                        new FirebaseService(OrderSummaryActivity.this).sendPushNotification(
+                                order.getCustomerId(),
+                                "Cap nhat don hang",
+                                getCustomerStatusMessage(nextStatus)
+                        );
                         notifyItemChanged(holder.getBindingAdapterPosition());
                     }
 
@@ -130,6 +135,14 @@ public class OrderSummaryActivity extends AppCompatActivity {
             if (FirebaseConstants.STATUS_PROCESSING.equals(currentStatus)) return FirebaseConstants.STATUS_SHIPPED;
             if (FirebaseConstants.STATUS_SHIPPED.equals(currentStatus)) return FirebaseConstants.STATUS_COMPLETED;
             return FirebaseConstants.STATUS_PENDING;
+        }
+
+        private String getCustomerStatusMessage(String status) {
+            if (FirebaseConstants.STATUS_PROCESSING.equals(status)) return "Quan dang pha che don hang cua ban.";
+            if (FirebaseConstants.STATUS_SHIPPED.equals(status)) return "Don hang cua ban dang duoc giao.";
+            if (FirebaseConstants.STATUS_COMPLETED.equals(status)) return "Don hang cua ban da hoan thanh.";
+            if (FirebaseConstants.STATUS_CANCELLED.equals(status)) return "Don hang cua ban da bi huy.";
+            return "Trang thai don hang da duoc cap nhat: " + status;
         }
 
         private void updateStatusUI(ViewHolder holder, String status) {

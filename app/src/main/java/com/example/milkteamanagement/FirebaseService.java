@@ -94,6 +94,17 @@ public class FirebaseService {
             notification.put("title", title);
             notification.put("body", body);
 
+            JSONObject data = new JSONObject();
+            data.put("title", title);
+            data.put("body", body);
+
+            JSONObject androidNotification = new JSONObject();
+            androidNotification.put("channel_id", NotificationHelper.CHANNEL_ID);
+
+            JSONObject android = new JSONObject();
+            android.put("priority", "HIGH");
+            android.put("notification", androidNotification);
+
             JSONObject message = new JSONObject();
             if (isTopic) {
                 message.put("topic", target);
@@ -101,6 +112,8 @@ public class FirebaseService {
                 message.put("token", target);
             }
             message.put("notification", notification);
+            message.put("data", data);
+            message.put("android", android);
 
             JSONObject jsonMain = new JSONObject();
             jsonMain.put("message", message);

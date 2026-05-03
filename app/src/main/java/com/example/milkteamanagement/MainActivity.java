@@ -11,11 +11,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.milkteamanagement.models.Product;
+import com.example.milkteamanagement.repositories.AuthRepository;
 import com.example.milkteamanagement.repositories.CartManager;
+import com.example.milkteamanagement.repositories.FirebaseConstants;
 import com.example.milkteamanagement.repositories.MenuRepository;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,11 +38,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.Manifest;
-import android.content.pm.PackageManager;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import android.os.Build;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private String currentCategory = "Tất cả";
     private boolean isUpdatingTabs = false;
     private GeminiRepository geminiRepository;
+    private ListenerRegistration orderStatusListener;
+    private final Map<String, String> knownOrderStatuses = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,15 +71,8 @@ public class MainActivity extends AppCompatActivity {
         menuRepository = new MenuRepository();
         loadMenuFromFirebase();
 
-        checkNotificationPermission();
-    }
-
-    private void checkNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
-            }
-        }
+        NotificationHelper.requestPostNotificationsIfNeeded(this);
+        startOrderStatusNotifications();
     }
 
     private void initViews() {
@@ -323,5 +319,55 @@ public class MainActivity extends AppCompatActivity {
         if (productAdapter != null) {
             runOnUiThread(() -> productAdapter.notifyDataSetChanged());
         }
+    }
+
+    private void startOrderStatusNotifications() {
+        if (AuthRepository.getInstance().getCurrentUser() == null) {
+            return;
+        }
+
+        String uid = AuthRepository.getInstance().getCurrentUser().getUid();
+        orderStatusListener = FirebaseFirestore.getInstance()
+                .collection(FirebaseConstants.COL_ORDERS)
+                .whereEqualTo("customerId", uid)
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null || snapshots == null) {
+                        return;
+                    }
+
+                    for (DocumentChange change : snapshots.getDocumentChanges()) {
+                        String orderId = change.getDocument().getId();
+                        String newStatus = change.getDocument().getString("status");
+                        String oldStatus = knownOrderStatuses.put(orderId, newStatus);
+
+                        if (change.getType() == DocumentChange.Type.MODIFIED
+                                && oldStatus != null
+                                && newStatus != null
+                                && !newStatus.equals(oldStatus)) {
+                            LocalNotificationSender.show(
+                                    this,
+                                    "Cap nhat don hang",
+                                    getCustomerStatusMessage(newStatus)
+                            );
+                        }
+                    }
+                });
+    }
+
+    private String getCustomerStatusMessage(String status) {
+        if (FirebaseConstants.STATUS_PROCESSING.equals(status)) return "Quan dang pha che don hang cua ban.";
+        if (FirebaseConstants.STATUS_SHIPPED.equals(status)) return "Don hang cua ban dang duoc giao.";
+        if (FirebaseConstants.STATUS_COMPLETED.equals(status)) return "Don hang cua ban da hoan thanh.";
+        if (FirebaseConstants.STATUS_CANCELLED.equals(status)) return "Don hang cua ban da bi huy.";
+        return "Trang thai don hang da duoc cap nhat: " + status;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (orderStatusListener != null) {
+            orderStatusListener.remove();
+            orderStatusListener = null;
+        }
+        super.onDestroy();
     }
 }

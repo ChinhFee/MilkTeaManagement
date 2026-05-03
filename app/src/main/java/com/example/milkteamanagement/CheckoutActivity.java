@@ -119,6 +119,11 @@ public class CheckoutActivity extends AppCompatActivity {
         orderRepository.placeOrder(order, new OrderRepository.OrderActionCallback() {
             @Override
             public void onSuccess() {
+                new FirebaseService(CheckoutActivity.this).sendNotificationToTopic(
+                        "admins",
+                        "Don hang moi",
+                        "Khach " + name + " vua dat don hang moi."
+                );
                 progressBar.setVisibility(View.GONE);
                 cartManager.clearCart();
                 Toast.makeText(CheckoutActivity.this, "Đặt hàng thành công!", Toast.LENGTH_LONG).show();

@@ -11,6 +11,7 @@ public class MilkTeaApp extends Application {
         super.onCreate();
         // Khởi tạo CartManager ngay khi app bắt đầu để đảm bảo dữ liệu được load từ SharedPreferences
         CartManager.getInstance(this);
+        NotificationHelper.createNotificationChannel(this);
 
         // Đảm bảo Provider được cập nhật cho các thiết bị cũ/GMS lỗi
         ProviderInstaller.installIfNeededAsync(this, new ProviderInstaller.ProviderInstallListener() {
