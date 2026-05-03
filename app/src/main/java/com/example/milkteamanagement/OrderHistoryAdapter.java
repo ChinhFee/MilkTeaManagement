@@ -55,26 +55,28 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
         }
         holder.tvOrderItems.setText(itemsSummary.toString());
 
-        // Status color coding
-        int statusColorRes = R.color.primaryColor;
+        // Status color and background coding
+        int statusBackgroundRes;
         switch (order.getStatus()) {
-            case FirebaseConstants.STATUS_PENDING:
-                statusColorRes = R.color.primaryColor;
-                break;
-            case FirebaseConstants.STATUS_COMPLETED:
-                statusColorRes = android.R.color.holo_green_dark;
+            case FirebaseConstants.STATUS_PROCESSING:
+                statusBackgroundRes = R.drawable.bg_status_processing;
                 break;
             case FirebaseConstants.STATUS_SHIPPED:
-                statusColorRes = android.R.color.holo_blue_dark;
+                statusBackgroundRes = R.drawable.bg_status_shipped;
+                break;
+            case FirebaseConstants.STATUS_COMPLETED:
+                statusBackgroundRes = R.drawable.bg_status_completed;
                 break;
             case FirebaseConstants.STATUS_CANCELLED:
-                statusColorRes = R.color.errorColor;
+                statusBackgroundRes = R.drawable.bg_status_cancelled;
                 break;
+            case FirebaseConstants.STATUS_PENDING:
             default:
-                statusColorRes = R.color.primaryDarkColor;
+                statusBackgroundRes = R.drawable.bg_status_pending;
                 break;
         }
-        holder.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), statusColorRes));
+        holder.tvOrderStatus.setBackgroundResource(statusBackgroundRes);
+        holder.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.white));
     }
 
     @Override

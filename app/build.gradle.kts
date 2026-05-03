@@ -26,11 +26,24 @@ android {
             properties.load(FileInputStream(localPropertiesFile))
         }
         val apiKey = properties.getProperty("GEMINI_API_KEY") ?: ""
+        val firebaseKey = properties.getProperty("FIREBASE_SERVICE_ACCOUNT_BASE64") ?: ""
         buildConfigField("String", "GEMINI_API_KEY", "\"$apiKey\"")
+        buildConfigField("String", "FIREBASE_SERVICE_ACCOUNT_BASE64", "\"$firebaseKey\"")
     }
 
     buildFeatures {
         buildConfig = true
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/INDEX.LIST"
+            excludes += "/META-INF/DEPENDENCIES"
+            excludes += "/META-INF/LICENSE"
+            excludes += "/META-INF/LICENSE.txt"
+            excludes += "/META-INF/NOTICE"
+            excludes += "/META-INF/NOTICE.txt"
+        }
     }
 
     buildTypes {
@@ -58,12 +71,15 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.messaging)
     implementation(libs.glide)
     implementation(libs.gson)
     implementation(libs.swiperefreshlayout)
     implementation(libs.generative.ai)
     implementation(libs.guava)
     implementation(libs.mpandroidchart)
+    implementation(libs.google.auth.library)
+    implementation(libs.okhttp)
     annotationProcessor(libs.glide.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

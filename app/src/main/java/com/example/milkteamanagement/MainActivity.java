@@ -32,6 +32,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import android.os.Build;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,6 +67,16 @@ public class MainActivity extends AppCompatActivity {
         
         menuRepository = new MenuRepository();
         loadMenuFromFirebase();
+
+        checkNotificationPermission();
+    }
+
+    private void checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
     }
 
     private void initViews() {

@@ -6,9 +6,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.milkteamanagement.models.User;
 import com.example.milkteamanagement.repositories.AuthRepository;
+import com.example.milkteamanagement.repositories.FirebaseConstants;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -66,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         authRepository.getUserData().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 User user = task.getResult();
+                updateFCMToken(user.getUid()); // Cập nhật token khi đăng nhập thành công
                 if ("admin".equalsIgnoreCase(user.getRole())) {
                     startActivity(new Intent(LoginActivity.this, AdminDashboardActivity.class));
                 } else {
@@ -76,6 +85,20 @@ public class LoginActivity extends AppCompatActivity {
                 btnLogin.setEnabled(true);
                 authRepository.logout(); // Đăng xuất nếu không lấy được data
                 Toast.makeText(this, "Lỗi khi kiểm tra quyền truy cập", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateFCMToken(String userId) {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                String token = task.getResult();
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("fcmToken", token);
+
+                FirebaseFirestore.getInstance().collection(FirebaseConstants.COL_USERS)
+                        .document(userId)
+                        .update(updates);
             }
         });
     }
