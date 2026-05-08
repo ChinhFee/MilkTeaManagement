@@ -16,7 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MilkTeaManagement" >
 
-        <!-- SplashActivity làm màn hình khởi đầu -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -74,12 +73,19 @@
             android:name=".AnalyticsActivity"
             android:exported="false" />
 
-        <!-- New Order Management Activities -->
         <activity
             android:name=".OrderSummaryActivity"
             android:exported="false" />
         <activity
             android:name=".TableMapActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".EvaluationActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ManageEvaluationsActivity"
             android:exported="false" />
 
     </application>

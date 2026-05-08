@@ -5,6 +5,7 @@ public class FirebaseConstants {
     public static final String COL_ORDERS = "Orders";
     public static final String COL_USERS = "Users";
     public static final String COL_TOPPINGS = "Toppings";
+    public static final String COL_EVALUATIONS = "Evaluations";
 
     public static final String STATUS_PENDING = "Đang chờ";
     public static final String STATUS_PROCESSING = "Đang pha chế";

@@ -1,8 +1,10 @@
 package com.example.milkteamanagement;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -54,21 +56,29 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
 
         // Status color coding
         int statusColorRes = R.color.primaryColor;
-        switch (order.getStatus()) {
-            case FirebaseConstants.STATUS_PENDING:
-                statusColorRes = R.color.primaryColor;
-                break;
-            case FirebaseConstants.STATUS_COMPLETED:
-                statusColorRes = android.R.color.holo_green_dark;
-                break;
-            case FirebaseConstants.STATUS_CANCELLED:
+        boolean isCompleted = FirebaseConstants.STATUS_COMPLETED.equals(order.getStatus());
+        
+        if (isCompleted) {
+            statusColorRes = android.R.color.holo_green_dark;
+            holder.btnEvaluate.setVisibility(View.VISIBLE);
+        } else {
+            holder.btnEvaluate.setVisibility(View.GONE);
+            if (FirebaseConstants.STATUS_CANCELLED.equals(order.getStatus())) {
                 statusColorRes = R.color.errorColor;
-                break;
-            default:
+            } else if (FirebaseConstants.STATUS_PENDING.equals(order.getStatus())) {
+                statusColorRes = R.color.primaryColor;
+            } else {
                 statusColorRes = R.color.primaryDarkColor;
-                break;
+            }
         }
+        
         holder.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), statusColorRes));
+
+        holder.btnEvaluate.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), EvaluationActivity.class);
+            intent.putExtra("ORDER_ID", order.getOrderId());
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -83,6 +93,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvOrderDate, tvOrderStatus, tvOrderId, tvOrderItems, tvOrderTotal;
+        Button btnEvaluate;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -91,6 +102,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
             tvOrderId = itemView.findViewById(R.id.tvOrderId);
             tvOrderItems = itemView.findViewById(R.id.tvOrderItems);
             tvOrderTotal = itemView.findViewById(R.id.tvOrderTotal);
+            btnEvaluate = itemView.findViewById(R.id.btnEvaluate);
         }
     }
 }

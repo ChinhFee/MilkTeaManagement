@@ -20,6 +20,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         CardView cardManageMenu = findViewById(R.id.cardManageMenu);
         CardView cardManageOrders = findViewById(R.id.cardManageOrders);
         CardView cardAnalytics = findViewById(R.id.cardAnalytics);
+        CardView cardManageEvaluations = findViewById(R.id.cardManageEvaluations);
         CardView cardLogout = findViewById(R.id.cardLogout);
 
         // Fetch and display Admin name
@@ -28,6 +29,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         cardManageMenu.setOnClickListener(v -> startActivity(new Intent(this, ManageMenuActivity.class)));
         cardManageOrders.setOnClickListener(v -> startActivity(new Intent(this, ManageOrdersActivity.class)));
         cardAnalytics.setOnClickListener(v -> startActivity(new Intent(this, AnalyticsActivity.class)));
+        cardManageEvaluations.setOnClickListener(v -> startActivity(new Intent(this, ManageEvaluationsActivity.class)));
 
         cardLogout.setOnClickListener(v -> {
             AuthRepository.getInstance().logout();
