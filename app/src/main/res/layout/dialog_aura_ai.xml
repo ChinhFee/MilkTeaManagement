@@ -30,21 +30,13 @@
         android:textColor="@color/textColorSecondary"
         android:textSize="14sp" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChatHistory"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginBottom="16dp">
-
-        <TextView
-            android:id="@+id/tvAiResponse"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lineSpacingExtra="4dp"
-            android:text="Đang chờ bạn trò chuyện..."
-            android:textColor="@color/textColorPrimary"
-            android:textSize="16sp" />
-    </ScrollView>
+        android:layout_height="350dp"
+        android:layout_marginBottom="16dp"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -38,6 +38,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import com.example.milkteamanagement.models.ChatMessage;
+import com.example.milkteamanagement.adapters.ChatAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private String currentCategory = "Tất cả";
     private boolean isUpdatingTabs = false;
     private GeminiRepository geminiRepository;
+    private final List<ChatMessage> chatMessages = new ArrayList<>();
+    private ChatAdapter chatAdapter;
     private ListenerRegistration orderStatusListener;
     private final Map<String, String> knownOrderStatuses = new HashMap<>();
 
@@ -106,10 +110,19 @@ public class MainActivity extends AppCompatActivity {
         View view = getLayoutInflater().inflate(R.layout.dialog_aura_ai, null);
         dialog.setContentView(view);
 
-        TextView tvResponse = view.findViewById(R.id.tvAiResponse);
+        RecyclerView rvChat = view.findViewById(R.id.rvChatHistory);
         EditText etMessage = view.findViewById(R.id.etUserMessage);
         ImageButton btnSend = view.findViewById(R.id.btnSend);
         ProgressBar loading = view.findViewById(R.id.loadingAi);
+
+        if (chatMessages.isEmpty()) {
+            chatMessages.add(new ChatMessage("Chào bạn! Aura đã sẵn sàng hỗ trợ. Bạn muốn tìm món gì hôm nay?", ChatMessage.TYPE_AI));
+        }
+
+        chatAdapter = new ChatAdapter(chatMessages);
+        rvChat.setLayoutManager(new LinearLayoutManager(this));
+        rvChat.setAdapter(chatAdapter);
+        rvChat.scrollToPosition(chatMessages.size() - 1);
 
         btnSend.setOnClickListener(v -> {
             String msg = etMessage.getText().toString().trim();
@@ -120,8 +133,12 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
+            // Thêm tin nhắn của User vào list
+            chatMessages.add(new ChatMessage(msg, ChatMessage.TYPE_USER));
+            chatAdapter.notifyItemInserted(chatMessages.size() - 1);
+            rvChat.smoothScrollToPosition(chatMessages.size() - 1);
+            
             loading.setVisibility(View.VISIBLE);
-            tvResponse.setText("Aura đang suy nghĩ...");
             etMessage.setText("");
 
             Futures.addCallback(geminiRepository.sendMessage(msg), new FutureCallback<com.google.ai.client.generativeai.type.GenerateContentResponse>() {
@@ -129,7 +146,10 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(com.google.ai.client.generativeai.type.GenerateContentResponse result) {
                     runOnUiThread(() -> {
                         loading.setVisibility(View.GONE);
-                        tvResponse.setText(formatAiResponse(result.getText()));
+                        String responseText = formatAiResponse(result.getText());
+                        chatMessages.add(new ChatMessage(responseText, ChatMessage.TYPE_AI));
+                        chatAdapter.notifyItemInserted(chatMessages.size() - 1);
+                        rvChat.smoothScrollToPosition(chatMessages.size() - 1);
                     });
                 }
 
@@ -138,7 +158,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "Gemini Error: " + t.getMessage(), t);
                     runOnUiThread(() -> {
                         loading.setVisibility(View.GONE);
-                        tvResponse.setText(formatGeminiError(t));
+                        String errorMsg = formatGeminiError(t);
+                        chatMessages.add(new ChatMessage(errorMsg, ChatMessage.TYPE_AI));
+                        chatAdapter.notifyItemInserted(chatMessages.size() - 1);
+                        rvChat.smoothScrollToPosition(chatMessages.size() - 1);
                     });
                 }
             }, androidx.core.content.ContextCompat.getMainExecutor(MainActivity.this));

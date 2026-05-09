@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="start"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/imgAiAvatar"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/logo_auraboba"
+        android:contentDescription="AI Avatar" />
+
+    <TextView
+        android:id="@+id/tvAiMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="64dp"
+        android:background="@drawable/bg_chat_ai"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:text="AI message"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="14sp" />
+</LinearLayout>
