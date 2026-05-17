@@ -77,7 +77,6 @@ public class CheckoutActivity extends AppCompatActivity {
                 }
             }
         }).addOnFailureListener(e -> {
-            // Ignore failure, user can fill manually
         });
     }
 

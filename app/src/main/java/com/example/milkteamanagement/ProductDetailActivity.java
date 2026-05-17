@@ -179,7 +179,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             String size = rbSizeM.isChecked() ? "M" : "L";
             
             int sugarId = rgSugar.getCheckedRadioButtonId();
-            String sugar = "50%"; // Default
+            String sugar = "50%";
             if (sugarId == R.id.sugar0) sugar = "0%";
             else if (sugarId == R.id.sugar30) sugar = "30%";
             else if (sugarId == R.id.sugar50) sugar = "50%";
@@ -187,7 +187,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             else if (sugarId == R.id.sugar100) sugar = "100%";
 
             int iceId = rgIce.getCheckedRadioButtonId();
-            String ice = "50%"; // Default
+            String ice = "50%";
             if (iceId == R.id.ice0) ice = "0%";
             else if (iceId == R.id.ice30) ice = "30%";
             else if (iceId == R.id.ice50) ice = "50%";

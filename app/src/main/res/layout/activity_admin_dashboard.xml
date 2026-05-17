@@ -10,7 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Top Navigation & Profile -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,7 +40,6 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <!-- Framed Title -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +57,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Main Glass Card Container -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -80,7 +77,6 @@
                     android:orientation="vertical"
                     android:padding="24dp">
 
-                    <!-- Section Header with Emphasis -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -104,13 +100,11 @@
                             android:letterSpacing="0.1"/>
                     </LinearLayout>
 
-                    <!-- Grid Menu Items -->
                     <GridLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:columnCount="2">
 
-                        <!-- Manage Menu -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardManageMenu"
                             android:layout_width="0dp"
@@ -147,7 +141,6 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
-                        <!-- Manage Orders -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardManageOrders"
                             android:layout_width="0dp"
@@ -184,7 +177,6 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
-                        <!-- Analytics -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardAnalytics"
                             android:layout_width="0dp"
@@ -221,7 +213,6 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
-                        <!-- Manage Evaluations -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardManageEvaluations"
                             android:layout_width="0dp"
@@ -258,7 +249,6 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
-                        <!-- Logout (Moved to separate row or styled differently if needed, here keeping in grid) -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardLogout"
                             android:layout_width="0dp"

@@ -57,7 +57,6 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
         }
         holder.tvOrderItems.setText(itemsSummary.toString());
 
-        // Status color coding
         int statusColorRes = R.color.primaryColor;
         switch (order.getStatus()) {
             case FirebaseConstants.STATUS_PENDING:

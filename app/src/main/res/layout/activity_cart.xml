@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundColor">
 
-    <!-- Header -->
     <RelativeLayout
         android:id="@+id/rlHeader"
         android:layout_width="match_parent"
@@ -43,7 +42,6 @@
             app:tint="@color/errorColor" />
     </RelativeLayout>
 
-    <!-- Content -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCart"
         android:layout_width="match_parent"
@@ -53,7 +51,6 @@
         android:clipToPadding="false"
         android:paddingVertical="8dp" />
 
-    <!-- Empty State -->
     <LinearLayout
         android:id="@+id/llEmptyCart"
         android:layout_width="wrap_content"
@@ -78,7 +75,6 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <!-- Bottom Action Area -->
     <LinearLayout
         android:id="@+id/llBottom"
         android:layout_width="match_parent"

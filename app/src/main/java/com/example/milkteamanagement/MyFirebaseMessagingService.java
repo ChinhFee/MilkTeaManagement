@@ -52,7 +52,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendRegistrationToServer(String token) {
-        // Cập nhật token lên Firestore nếu user đã login
         String userId = FirebaseAuth.getInstance().getUid();
         if (userId != null) {
             Map<String, Object> tokenMap = new HashMap<>();

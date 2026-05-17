@@ -6,7 +6,6 @@
     <string name="profile_address_not_updated">Chưa cập nhật</string>
     <string name="profile_load_error">Không thể tải thông tin cá nhân</string>
 
-    <!-- Manage Menu -->
     <string name="menu_management">QUẢN LÝ MENU</string>
     <string name="product_list">Danh sách món</string>
     <string name="topping_list">Danh sách Topping</string>

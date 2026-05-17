@@ -20,7 +20,6 @@ public class GeminiRepository {
     public GeminiRepository(String apiKey, String menuData) {
         Log.d("GeminiRepository", "Initializing Gemini model: " + MODEL_NAME);
 
-        // 1. Khởi tạo System Instruction một cách an toàn cho Java
         Content.Builder systemBuilder = new Content.Builder();
         systemBuilder.setRole("system");
         systemBuilder.addPart(new TextPart("Bạn là trợ lý ảo của quán trà sữa AuraBOBA. " +
@@ -41,12 +40,12 @@ public class GeminiRepository {
         GenerativeModel gm = new GenerativeModel(
                 MODEL_NAME,
                 apiKey,
-                null,               // 3. generationConfig
-                null,               // 4. safetySettings
-                requestOptions,     // 5. requestOptions (Vị trí số 5)
-                null,               // 6. tools
-                null,               // 7. toolConfig
-                systemInstruction   // 8. systemInstruction (Vị trí số 8)
+                null,
+                null,
+                requestOptions,
+                null,
+                null,
+                systemInstruction
         );
 
         this.model = GenerativeModelFutures.from(gm);

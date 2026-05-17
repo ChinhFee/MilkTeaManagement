@@ -32,7 +32,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         CardView cardManageEvaluations = findViewById(R.id.cardManageEvaluations);
         CardView cardLogout = findViewById(R.id.cardLogout);
 
-        // Fetch and display Admin name
         loadAdminProfile();
         NotificationHelper.requestPostNotificationsIfNeeded(this);
         FirebaseMessaging.getInstance().subscribeToTopic("admins");

@@ -45,7 +45,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Ánh xạ View
         imgAvatar = findViewById(R.id.imgAvatar);
         tvName = findViewById(R.id.tvName);
         tvEmail = findViewById(R.id.tvEmail);
@@ -58,11 +57,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         authRepository = AuthRepository.getInstance();
 
-        // Tải thông tin người dùng
         loadUserProfile();
-        // ... rest of the code
 
-        // Xử lý đăng xuất
         btnLogout.setOnClickListener(v -> {
             authRepository.logout();
             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
@@ -97,14 +93,12 @@ public class ProfileActivity extends AppCompatActivity {
                         : getString(R.string.profile_address_not_updated);
                 tvAddress.setText(getString(R.string.profile_address, address));
 
-                // Load Avatar
                 if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
                     Glide.with(this)
                             .load(user.getAvatarUrl())
                             .circleCrop()
                             .into(imgAvatar);
                 } else {
-                    // Thiết lập hình đại diện mặc định dựa trên giới tính nếu chưa có ảnh đại diện
                     if ("Nữ".equalsIgnoreCase(user.getGender())) {
                         imgAvatar.setImageResource(R.drawable.ic_gender_female);
                     } else {

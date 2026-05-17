@@ -88,13 +88,11 @@ public class ManageMenuActivity extends AppCompatActivity {
                 menuRepository.updateProductAvailability(product.getId(), isAvailable, new ToppingRepository.ToppingCallback() {
                     @Override
                     public void onSuccess() {
-                        // Cập nhật thành công, không cần Toast rườm rà vì Switch đã thay đổi
                     }
 
                     @Override
                     public void onFailure(String message) {
                         Toast.makeText(ManageMenuActivity.this, "Lỗi cập nhật trạng thái: " + message, Toast.LENGTH_SHORT).show();
-                        // Rollback UI nếu lỗi
                         loadData();
                     }
                 });
@@ -117,7 +115,6 @@ public class ManageMenuActivity extends AppCompatActivity {
                 toppingRepository.updateToppingAvailability(topping.getId(), isAvailable, new ToppingRepository.ToppingCallback() {
                     @Override
                     public void onSuccess() {
-                        // Cập nhật thành công
                     }
 
                     @Override

@@ -39,7 +39,6 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin" />
 
-            <!-- Header Section (Floating over Banner) -->
             <LinearLayout
                 android:id="@+id/llHeader"
                 android:layout_width="match_parent"
@@ -86,7 +85,6 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-        <!-- Category Tabs -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
@@ -98,7 +96,6 @@
             app:tabTextColor="@color/textColorSecondary" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Product List Section -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvProducts"
         android:layout_width="match_parent"
@@ -107,7 +104,6 @@
         android:clipToPadding="false"
         android:padding="12dp" />
 
-    <!-- Floating Action Button for Cart -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabCart"
         android:layout_width="wrap_content"

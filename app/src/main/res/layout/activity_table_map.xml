@@ -10,7 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Header -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,7 +33,6 @@
                 android:textStyle="bold" />
         </RelativeLayout>
 
-        <!-- Floor Selection -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayoutFloors"
             android:layout_width="match_parent"

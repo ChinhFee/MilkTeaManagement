@@ -18,7 +18,6 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView tvLogin;
     private AuthRepository authRepository;
 
-    // Mã bảo vệ để đăng ký quyền Admin
     private static final String SECRET_ADMIN_CODE = "ADMIN123";
 
     @Override
@@ -53,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         String password = etPassword.getText().toString().trim();
 
         int selectedGenderId = rgGender.getCheckedRadioButtonId();
-        String gender = "Nam"; // Mặc định
+        String gender = "Nam";
         if (selectedGenderId == R.id.rbFemale) {
             gender = "Nữ";
         }
@@ -63,7 +62,6 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Xác định vai trò dựa trên mã Admin
         String tempRole = "customer";
         if (!adminCodeInput.isEmpty()) {
             if (SECRET_ADMIN_CODE.equals(adminCodeInput)) {

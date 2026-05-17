@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            // Thêm tin nhắn của User vào list
             chatMessages.add(new ChatMessage(msg, ChatMessage.TYPE_USER));
             chatAdapter.notifyItemInserted(chatMessages.size() - 1);
             rvChat.smoothScrollToPosition(chatMessages.size() - 1);
@@ -235,13 +234,11 @@ public class MainActivity extends AppCompatActivity {
                 fullProductList.clear();
                 fullProductList.addAll(products);
 
-                // Tạo chuỗi menu một lần duy nhất khi dữ liệu thay đổi
                 StringBuilder menuStr = new StringBuilder();
                 for (Product p : fullProductList) {
                     menuStr.append(p.getName()).append(" (").append(p.getPrice()).append("đ), ");
                 }
 
-                // Khởi tạo hoặc cập nhật Gemini với menu mới
                 if (geminiRepository == null) {
                     geminiRepository = new GeminiRepository(BuildConfig.GEMINI_API_KEY, menuStr.toString());
                 }
@@ -265,10 +262,8 @@ public class MainActivity extends AppCompatActivity {
         String savedCategory = currentCategory;
         tabLayout.removeAllTabs();
         
-        // Thêm tab "Tất cả"
         tabLayout.addTab(tabLayout.newTab().setText("Tất cả"));
         
-        // Lấy danh sách category duy nhất và sắp xếp A-Z
         Set<String> categories = new TreeSet<>();
         for (Product p : products) {
             if (p != null && p.getCategory() != null && !p.getCategory().trim().isEmpty()) {
@@ -287,7 +282,6 @@ public class MainActivity extends AppCompatActivity {
             count++;
         }
         
-        // Chọn lại tab cũ nếu nó vẫn tồn tại
         TabLayout.Tab tabToSelect = tabLayout.getTabAt(selectedIndex);
         if (tabToSelect != null) {
             tabToSelect.select();

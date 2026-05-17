@@ -63,17 +63,14 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Product product = (Product) item;
             ProductViewHolder pViewHolder = (ProductViewHolder) holder;
             
-            // Kiểm tra Null an toàn cho Tên
             pViewHolder.tvName.setText(product.getName() != null ? product.getName() : "Sản phẩm chưa có tên");
             
-            // Kiểm tra an toàn cho Giá (Tránh lỗi String.format)
             try {
                 pViewHolder.tvPrice.setText(String.format(Locale.getDefault(), "%,d VNĐ", product.getPrice()));
             } catch (Exception e) {
                 pViewHolder.tvPrice.setText("Liên hệ");
             }
 
-            // Glide an toàn
             String imageUrl = product.getImageUrl();
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 String directLink = driveRepository.convertToDirectLink(imageUrl);
@@ -86,7 +83,6 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 pViewHolder.imgProduct.setImageResource(R.drawable.img_placeholder);
             }
 
-            // Xử lý hiển thị Hết hàng
             if (product.isAvailable()) {
                 pViewHolder.viewOutStock.setVisibility(View.GONE);
                 pViewHolder.tvOutStock.setVisibility(View.GONE);

@@ -3,7 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Tông màu AuraBOBA cao cấp -->
     <color name="primaryColor">#C89D32</color> <!-- Gold -->
     <color name="primaryLightColor">#E5C36E</color>
     <color name="primaryDarkColor">#8E6E1D</color>
@@ -23,11 +22,9 @@
     <color name="darkGradientStart">#1A1A1A</color>
     <color name="darkGradientEnd">#000000</color>
 
-    <!-- Các màu bổ trợ -->
     <color name="gray_light">#E0E0E0</color>
     <color name="brown_soft">#D7CCC8</color>
 
-    <!-- Màu cho phần Admin -->
     <color name="admin_primary">#3F51B5</color>
     <color name="admin_background">#F5F5F5</color>
     <color name="card_bg">#FFFFFF</color>

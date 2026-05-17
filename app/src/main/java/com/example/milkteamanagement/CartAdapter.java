@@ -53,7 +53,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         CartItem item = cartItems.get(position);
         holder.tvName.setText(item.getProductName());
         
-        // Load hình ảnh sản phẩm
         if (item.getProductImageUrl() != null && !item.getProductImageUrl().isEmpty()) {
             String directLink = driveRepository.convertToDirectLink(item.getProductImageUrl());
             Glide.with(holder.itemView.getContext())

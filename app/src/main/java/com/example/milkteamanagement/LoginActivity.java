@@ -37,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
 
         authRepository = AuthRepository.getInstance();
 
-        // Kiểm tra nếu đã đăng nhập từ trước
         if (authRepository.isLoggedIn()) {
             checkUserRoleAndNavigate();
         }
@@ -74,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         authRepository.getUserData().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 User user = task.getResult();
-                updateFCMToken(user.getUid()); // Cập nhật token khi đăng nhập thành công
+                updateFCMToken(user.getUid());
                 if ("admin".equalsIgnoreCase(user.getRole())) {
                     FirebaseMessaging.getInstance().subscribeToTopic("admins");
                     startActivity(new Intent(LoginActivity.this, AdminDashboardActivity.class));
@@ -85,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             } else {
                 btnLogin.setEnabled(true);
-                authRepository.logout(); // Đăng xuất nếu không lấy được data
+                authRepository.logout();
                 Toast.makeText(this, "Lỗi khi kiểm tra quyền truy cập", Toast.LENGTH_SHORT).show();
             }
         });

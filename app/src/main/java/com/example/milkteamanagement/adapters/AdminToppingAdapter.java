@@ -44,7 +44,6 @@ public class AdminToppingAdapter extends RecyclerView.Adapter<AdminToppingAdapte
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         holder.tvPrice.setText("+ " + formatter.format(topping.getPrice()));
 
-        // Xử lý nút Switch
         holder.switchAvailable.setOnCheckedChangeListener(null);
         holder.switchAvailable.setChecked(topping.isAvailable());
         holder.switchAvailable.setText(topping.isAvailable() ? "Còn" : "Hết");

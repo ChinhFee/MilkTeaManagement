@@ -63,13 +63,11 @@ public class FirebaseService {
     private void getAccessTokenAndSend(String target, String title, String body, boolean isTopic) {
         new Thread(() -> {
             try {
-                // Đọc chuỗi Base64 từ BuildConfig (đã cấu hình trong build.gradle.kts và local.properties)
                 String base64Key = BuildConfig.FIREBASE_SERVICE_ACCOUNT_BASE64;
                 if (base64Key == null || base64Key.isEmpty()) {
                     return;
                 }
 
-                // Giải mã Base64 thành InputStream để GoogleCredentials có thể đọc
                 byte[] decodedKey = Base64.decode(base64Key, Base64.DEFAULT);
                 InputStream is = new ByteArrayInputStream(decodedKey);
 
@@ -147,7 +145,6 @@ public class FirebaseService {
         }
     }
 
-    // --- Các phương thức hỗ trợ khác ---
 
     public interface OnProductsLoadedListener {
         void onSuccess(List<Product> products);

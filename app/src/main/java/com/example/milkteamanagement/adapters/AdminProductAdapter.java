@@ -54,7 +54,6 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
                 .placeholder(R.drawable.img_placeholder)
                 .into(holder.imgProduct);
 
-        // Xử lý nút Switch
         holder.switchAvailable.setOnCheckedChangeListener(null); // Tránh trigger loop
         holder.switchAvailable.setChecked(product.isAvailable());
         holder.switchAvailable.setText(product.isAvailable() ? "Còn" : "Hết");
